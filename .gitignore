@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+datasets/
+backend/generated/
+backend/previews/
+backend/uploads/
+*.SAFE
+*.jp2
+*.tif
+*.tiff
+
+# Python
+__pycache__/
+*.py[cod]
+
+backend/sample.tif

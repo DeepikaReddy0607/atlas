@@ -3,7 +3,7 @@ from pathlib import Path
 import shutil
 import uuid
 from datetime import datetime
-
+from app.engines.geo.reader import GeoReader
 from app.storage.file_registry import uploaded_files
 
 router = APIRouter()
@@ -38,8 +38,20 @@ async def upload_file(file: UploadFile = File(...)):
     # Save file
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+        geo_metadata = {}
 
-    # Create metadata
+        if file.filename.lower().endswith((".tif", ".tiff")):
+            geo_metadata = GeoReader.read_metadata(file_path)
+        
+        from app.engines.geo.preview import GeoPreview
+
+        preview_path = f"previews/{unique_id}.png"
+
+        GeoPreview.generate_preview(
+            file_path,
+            preview_path
+        )
+            # Create metadata
     metadata = {
         "id": unique_id,
         "original_filename": file.filename,
@@ -54,4 +66,8 @@ async def upload_file(file: UploadFile = File(...)):
     uploaded_files.append(metadata)
 
     # Return metadata
-    return metadata
+    return {
+    **metadata,
+    "geo_metadata": geo_metadata,
+    "preview": preview_path
+}
