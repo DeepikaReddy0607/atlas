@@ -21,7 +21,16 @@ class RGBGenerator:
 
         rgb = rgb.astype(np.float32)
 
-        rgb = (rgb - rgb.min()) / (rgb.max() - rgb.min())
+        for i in range(3):
+            band = rgb[:, :, i]
+
+            p2 = np.percentile(band, 2)
+            p98 = np.percentile(band, 98)
+
+            band = np.clip(band, p2, p98)
+            band = (band - p2) / (p98 - p2)
+
+            rgb[:, :, i] = band
 
         rgb = (rgb * 255).astype(np.uint8)
 
