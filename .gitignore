@@ -231,3 +231,15 @@ __pycache__/
 *.py[cod]
 
 backend/sample.tif
+
+# External frameworks
+models/geoseg/
+
+# Model checkpoints
+models/**/*.pth
+models/**/*.pt
+models/**/*.ckpt
+models/**/*.onnx
+
+# Generated outputs
+backend/generated/
