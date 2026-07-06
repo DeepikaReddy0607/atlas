@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image
 
 from app.engines.vision.models.base import BasePredictor
+from backend.app.engines.vision.result import SegmentationResult
 
 
 MODEL_NAME = "nvidia/segformer-b0-finetuned-ade-512-512"
@@ -52,4 +53,11 @@ class ADE20KPredictor(BasePredictor):
 
         prediction = prediction.argmax(dim=1)[0]
 
-        return prediction.cpu().numpy()
+        return SegmentationResult(
+            mask=prediction.cpu().numpy(),
+            labels=[],
+            class_ids=[],
+            model_name="ADE20K",
+            inference_time_ms=...,
+            metadata={}
+        )

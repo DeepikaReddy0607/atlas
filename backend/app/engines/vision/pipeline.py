@@ -6,13 +6,13 @@ from app.engines.vision.stitcher import MaskStitcher
 
 class VisionPipeline:
 
-    def __init__(self):
+    def __init__(self, model_name="ade20k"):
 
         from app.engines.vision.registry import ModelRegistry
 
-        self.predictor = ModelRegistry.get(
-            "ade20k"
-        )
+        print(f"Using model: {model_name}")
+
+        self.predictor = ModelRegistry.get(model_name)
 
     def run(self, image_path):
 
@@ -26,7 +26,7 @@ class VisionPipeline:
 
         for i, (tile, x, y) in enumerate(tiles):
 
-            print(f"{i+1}/{len(tiles)}")
+            print(f"{i + 1}/{len(tiles)}")
 
             mask = self.predictor.predict(tile)
 

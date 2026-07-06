@@ -1,17 +1,14 @@
-from PIL import Image
-import numpy as np
-
 from app.engines.vision.models.base import BasePredictor
-
 
 class OpenEarthMapPredictor(BasePredictor):
 
+    MODEL_NAME = "OpenEarthMap"
+
+    ROAD_CLASSES = []
+
     def __init__(self):
+        self.model = None
+        self.processor = None
 
-        print("OpenEarthMap model not integrated yet.")
-
-    def predict(self, image: Image.Image) -> np.ndarray:
-
-        raise NotImplementedError(
-            "OpenEarthMap predictor is not implemented yet."
-        )
+    def predict(self, image):
+        raise NotImplementedError
