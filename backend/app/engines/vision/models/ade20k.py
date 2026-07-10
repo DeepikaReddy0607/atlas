@@ -1,37 +1,40 @@
+import time
+
+import torch
+from PIL import Image
 from transformers import (
     AutoImageProcessor,
     SegformerForSemanticSegmentation,
 )
 
-import torch
-import numpy as np
-
-from PIL import Image
-
 from app.engines.vision.models.base import BasePredictor
-from backend.app.engines.vision.result import SegmentationResult
-
-
-MODEL_NAME = "nvidia/segformer-b0-finetuned-ade-512-512"
+from app.engines.vision.result import SegmentationResult
 
 
 class ADE20KPredictor(BasePredictor):
 
+    MODEL_NAME = "nvidia/segformer-b0-finetuned-ade-512-512"
+
     def __init__(self):
 
-        print("Loading SegFormer...")
+        print("Loading SegFormer (ADE20K)...")
 
         self.processor = AutoImageProcessor.from_pretrained(
-            MODEL_NAME
+            self.MODEL_NAME
         )
 
         self.model = SegformerForSemanticSegmentation.from_pretrained(
-            MODEL_NAME
+            self.MODEL_NAME
         )
 
         self.model.eval()
 
-    def predict(self, image: Image.Image):
+    def predict(
+        self,
+        image: Image.Image,
+    ) -> SegmentationResult:
+
+        start = time.perf_counter()
 
         inputs = self.processor(
             images=image,
@@ -39,7 +42,6 @@ class ADE20KPredictor(BasePredictor):
         )
 
         with torch.no_grad():
-
             outputs = self.model(**inputs)
 
         logits = outputs.logits
@@ -53,11 +55,16 @@ class ADE20KPredictor(BasePredictor):
 
         prediction = prediction.argmax(dim=1)[0]
 
+        inference_time = (
+            time.perf_counter() - start
+        ) * 1000
+
         return SegmentationResult(
             mask=prediction.cpu().numpy(),
-            labels=[],
-            class_ids=[],
             model_name="ADE20K",
-            inference_time_ms=...,
-            metadata={}
+            inference_time_ms=round(inference_time, 2),
+            image_size=image.size,
+            metadata={
+                "model_id": self.MODEL_NAME,
+            },
         )

@@ -1,20 +1,21 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Any
 
 import numpy as np
 
 
 @dataclass
 class SegmentationResult:
+    """
+    Output produced by every Vision model in ATLAS.
+    """
 
     mask: np.ndarray
-
-    labels: List[str]
-
-    class_ids: List[int]
 
     model_name: str
 
     inference_time_ms: float
 
-    metadata: Dict
+    image_size: tuple[int, int]
+
+    metadata: dict[str, Any]

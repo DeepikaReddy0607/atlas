@@ -1,16 +1,35 @@
+from dataclasses import dataclass
 from PIL import Image
+
+
+@dataclass
+class Tile:
+
+    image: Image.Image
+
+    x: int
+
+    y: int
+
+    index: int
 
 
 class ImageTiler:
 
     @staticmethod
-    def split(image, tile_size=512):
+    def split(
+        image: Image.Image,
+        tile_size: int = 512,
+    ):
 
         tiles = []
 
         width, height = image.size
 
+        index = 0
+
         for y in range(0, height, tile_size):
+
             for x in range(0, width, tile_size):
 
                 tile = image.crop(
@@ -22,6 +41,15 @@ class ImageTiler:
                     )
                 )
 
-                tiles.append((tile, x, y))
+                tiles.append(
+                    Tile(
+                        image=tile,
+                        x=x,
+                        y=y,
+                        index=index,
+                    )
+                )
+
+                index += 1
 
         return tiles

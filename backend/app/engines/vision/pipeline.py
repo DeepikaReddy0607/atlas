@@ -24,16 +24,31 @@ class VisionPipeline:
 
         print(f"Processing {len(tiles)} tiles...")
 
-        for i, (tile, x, y) in enumerate(tiles):
+        for i, tile in enumerate(tiles):
 
-            print(f"{i + 1}/{len(tiles)}")
+            print(f"Processing tile {i + 1}/{len(tiles)}")
 
-            mask = self.predictor.predict(tile)
+            result = self.predictor.predict(tile.image)
 
-            predictions.append((mask, x, y))
+            predictions.append(
+                (
+                    result.mask,
+                    tile.x,
+                    tile.y,
+                )
+            )
 
-        return MaskStitcher.stitch(
+        stitched_mask =  MaskStitcher.stitch(
             predictions,
             image.width,
             image.height,
+        )
+        from app.engines.vision.result import SegmentationResult
+
+        return SegmentationResult(
+            mask=stitched_mask,
+            model_name=result.model_name,
+            inference_time_ms=result.inference_time_ms,
+            image_size=image.size,
+            metadata=result.metadata,
         )
