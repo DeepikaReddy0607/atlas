@@ -7,6 +7,7 @@ from app.engines.analysis.criticality import CriticalityAnalyzer
 from app.engines.analysis.resilience import ResilienceAnalyzer
 from app.engines.analysis.risk import RiskAssessment
 from app.engines.analysis.simulator import ScenarioSimulator
+from outputs.visualizations.engine import VisualizationEngine
 
 class AtlasEngine:
     """
@@ -34,6 +35,8 @@ class AtlasEngine:
     def __init__(self, model_name: str = "ade20k"):
 
         self.vision = VisionPipeline(model_name)
+
+        self.visualization = VisualizationEngine()
 
     def analyze(self, image_path: str):
 
@@ -119,7 +122,7 @@ class AtlasEngine:
             critical_node,
         )
 
-        return AtlasResult(
+        atlas_result = AtlasResult(
             segmentation=segmentation,
             pixel_graph=pixel_graph,
             topology_graph=topology_graph,
@@ -129,3 +132,8 @@ class AtlasEngine:
             simulation=simulation,
             recommendation=recommendation,
         )
+        atlas_result.visualizations = self.visualization.generate(
+            image_path=image_path,
+            atlas_result=atlas_result,
+        )
+        return atlas_result

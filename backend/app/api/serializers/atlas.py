@@ -3,6 +3,9 @@ from app.api.schemas.atlas import (
     GraphSummary,
     SegmentationSummary,
     SimulationSummary,
+    CriticalitySummary,
+    NodeCriticality,
+    EdgeCriticality,
 )
 
 from app.engines.atlas.result import AtlasResult
@@ -34,22 +37,24 @@ def serialize_atlas_result(
             edges=result.topology_graph.number_of_edges(),
         ),
 
-        criticality={
-            "node": [
-                {
-                    "node": list(node),
-                    "score": score,
-                }
+        criticality=CriticalitySummary(
+
+            node=[
+                NodeCriticality(
+                    node=list(node),
+                    score=score,
+                )
                 for node, score in result.criticality["node"].items()
             ],
-            "edge": [
-                {
-                    "edge": [list(p) for p in edge],
-                    "score": score,
-                }
+
+            edge=[
+                EdgeCriticality(
+                    edge=[list(p) for p in edge],
+                    score=score,
+                )
                 for edge, score in result.criticality["edge"].items()
             ],
-        },
+        ),
 
         resilience={
             "critical_node": (
@@ -84,5 +89,31 @@ def serialize_atlas_result(
 
         recommendation=result.recommendation,
 
-        visualization_path=result.visualization_path,
+        visualizations={
+            "segmentation_overlay": (
+                result.visualizations.segmentation_overlay
+                if result.visualizations
+                else None
+            ),
+            "road_mask": (
+                result.visualizations.road_mask
+                if result.visualizations
+                else None
+            ),
+            "skeleton": (
+                result.visualizations.skeleton
+                if result.visualizations
+                else None
+            ),
+            "graph": (
+                result.visualizations.graph
+                if result.visualizations
+                else None
+            ),
+            "criticality": (
+                result.visualizations.criticality
+                if result.visualizations
+                else None
+            ),
+        },
     )

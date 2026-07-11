@@ -1,5 +1,18 @@
 from pydantic import BaseModel
 
+class NodeCriticality(BaseModel):
+    node: list[int]
+    score: float
+
+
+class EdgeCriticality(BaseModel):
+    edge: list[list[int]]
+    score: float
+
+
+class CriticalitySummary(BaseModel):
+    node: list[NodeCriticality]
+    edge: list[EdgeCriticality]
 
 class GraphSummary(BaseModel):
     nodes: int
@@ -32,6 +45,13 @@ class SimulationSummary(BaseModel):
 
     critical_node: list | None
 
+class VisualizationSummary(BaseModel):
+    segmentation_overlay: str | None = None
+    road_mask: str | None = None
+    skeleton: str | None = None
+    graph: str | None = None
+    criticality: str | None = None
+
 
 class AtlasResponse(BaseModel):
 
@@ -41,8 +61,8 @@ class AtlasResponse(BaseModel):
 
     topology_graph: GraphSummary
 
-    criticality: dict
-
+    criticality: CriticalitySummary
+    
     resilience: dict
 
     risk: dict
@@ -51,4 +71,5 @@ class AtlasResponse(BaseModel):
 
     recommendation: str | None = None
 
-    visualization_path: str | None = None
+    visualizations: VisualizationSummary
+

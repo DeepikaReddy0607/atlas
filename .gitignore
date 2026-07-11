@@ -243,3 +243,42 @@ models/**/*.onnx
 
 # Generated outputs
 backend/generated/
+
+# ==================================================
+# Project ATLAS
+# ==================================================
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Vite cache
+node_modules/.vite/
+
+# Uploads (keep folder structure)
+uploads/*
+!uploads/.gitkeep
+
+# Generated visualizations and analysis
+outputs/*
+!outputs/.gitkeep
+
+# FastAPI runtime cache
+*.db
+*.sqlite3
+
+# Hugging Face cache
+.huggingface/
+hf_cache/
+.cache/huggingface/
+
+# OS
+.DS_Store
+Thumbs.db
+
+backend/outputs/*
+!backend/outputs/.gitkeep
+!backend/outputs/visualizations/
+backend/outputs/visualizations/*
+!backend/outputs/visualizations/.gitkeep

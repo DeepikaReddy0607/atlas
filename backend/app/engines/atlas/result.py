@@ -5,7 +5,7 @@ import networkx as nx
 
 from app.engines.vision.result import SegmentationResult
 from app.engines.analysis.simulator import SimulationResult
-
+from outputs.visualizations.result import VisualizationResult
 
 @dataclass
 class AtlasResult:
@@ -29,4 +29,4 @@ class AtlasResult:
 
     recommendation: Optional[str] = None
 
-    visualization_path: Optional[str] = None
+    visualizations: VisualizationResult | None = None
