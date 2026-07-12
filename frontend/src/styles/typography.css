@@ -1,0 +1,17 @@
+:root {
+
+  --font-sans:
+    Inter,
+    Geist,
+    system-ui,
+    sans-serif;
+
+  --font-xs: 12px;
+  --font-sm: 14px;
+  --font-base: 16px;
+  --font-lg: 18px;
+  --font-xl: 20px;
+  --font-2xl: 24px;
+  --font-3xl: 30px;
+
+}

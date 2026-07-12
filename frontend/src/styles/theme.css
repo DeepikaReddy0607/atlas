@@ -1,0 +1,42 @@
+:root {
+
+  /* Backgrounds */
+  --atlas-bg: #0B1220;
+  --atlas-surface: #111827;
+  --atlas-elevated: #172033;
+
+  /* Borders */
+  --atlas-border: #263041;
+
+  /* Text */
+  --atlas-text: #F8FAFC;
+  --atlas-text-secondary: #CBD5E1;
+  --atlas-text-muted: #94A3B8;
+
+  /* Brand */
+  --atlas-primary: #3B82F6;
+
+  /* Status */
+  --atlas-success: #22C55E;
+  --atlas-warning: #F59E0B;
+  --atlas-danger: #EF4444;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  /* Header */
+  --header-height: 64px;
+
+  /* Dock */
+  --dock-width: 72px;
+
+  /* Inspector */
+  --inspector-width: 340px;
+
+  /* Status Bar */
+  --status-height: 32px;
+
+}

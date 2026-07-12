@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.2",
     "@tanstack/react-query": "^5.101.2",
     "axios": "^1.18.1",
     "framer-motion": "^12.42.2",
@@ -18,7 +19,8 @@
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
     "recharts": "^3.9.2",
-    "sonner": "^2.0.7"
+    "sonner": "^2.0.7",
+    "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
