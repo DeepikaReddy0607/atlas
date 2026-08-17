@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class NodeCriticality(BaseModel):
     node: list[int]
@@ -13,6 +13,30 @@ class EdgeCriticality(BaseModel):
 class CriticalitySummary(BaseModel):
     node: list[NodeCriticality]
     edge: list[EdgeCriticality]
+
+class GraphNode(BaseModel):
+    id: int
+    x: int
+    y: int
+
+
+class GraphPoint(BaseModel):
+    x: int
+    y: int
+
+
+class GraphEdge(BaseModel):
+    source: int
+    target: int
+    pixels: list[GraphPoint] = Field(
+        default_factory=list
+    )
+    length: int = 0
+
+
+class GraphData(BaseModel):
+    nodes: list[GraphNode]
+    edges: list[GraphEdge]
 
 class GraphSummary(BaseModel):
     nodes: int
@@ -61,6 +85,8 @@ class AtlasResponse(BaseModel):
 
     topology_graph: GraphSummary
 
+    topology_graph_data: GraphData
+    
     criticality: CriticalitySummary
     
     resilience: dict

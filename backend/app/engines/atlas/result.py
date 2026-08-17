@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 import networkx as nx
-
+import numpy as np
 from app.engines.vision.result import SegmentationResult
 from app.engines.analysis.simulator import SimulationResult
 from outputs.visualizations.result import VisualizationResult
@@ -15,6 +15,8 @@ class AtlasResult:
 
     segmentation: Optional[SegmentationResult] = None
 
+    skeleton: np.ndarray | None = None
+    
     pixel_graph: Optional[nx.Graph] = None
 
     topology_graph: Optional[nx.Graph] = None

@@ -19,3 +19,8 @@ class SegmentationResult:
     image_size: tuple[int, int]
 
     metadata: dict[str, Any]
+
+    # Optional per-class logits.
+    # Used by the vision pipeline for overlap-aware
+    # tile stitching.
+    logits: np.ndarray | None = None

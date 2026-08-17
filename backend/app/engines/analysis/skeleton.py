@@ -14,4 +14,4 @@ class Skeletonizer:
 
         skeleton = skeletonize(binary)
 
-        return (skeleton * 255).astype(np.uint8)
+        return skeleton

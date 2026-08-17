@@ -3,17 +3,22 @@ import {
   Search,
   UserCircle2,
   Plus,
+  Circle,
 } from "lucide-react";
 
+import { useAtlasAnalysis } from "../../context/AtlasAnalysisContext";
+
 const Header = () => {
+  const { analysisResult, selectedFile } = useAtlasAnalysis();
+
   return (
     <header className="flex h-16 items-center justify-between border-b border-slate-800 bg-slate-900 px-6">
 
-      {/* ---------- Left Section ---------- */}
-      <div className="flex items-center gap-10">
+      {/* ================= Left ================= */}
+      <div className="flex items-center gap-8">
 
         {/* Brand */}
-        <div className="flex flex-col">
+        <div className="flex h-screen min-h-0 w-full min-w-0 flex-col overflow-hidden">
           <h1 className="text-lg font-bold tracking-wide text-slate-100">
             ATLAS
           </h1>
@@ -60,10 +65,102 @@ const Header = () => {
 
         </div>
 
+        {/* Live Analysis Status */}
+        <div
+          className="
+            flex
+            items-center
+            gap-6
+            rounded-md
+            border
+            border-slate-700
+            bg-slate-800
+            px-4
+            py-2
+          "
+        >
+          <div>
+            <p className="text-[10px] uppercase tracking-wide text-slate-500">
+              Image
+            </p>
+
+            <p className="text-sm text-slate-100">
+              {selectedFile?.name ?? "--"}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[10px] uppercase tracking-wide text-slate-500">
+              Model
+            </p>
+
+            <p className="text-sm text-slate-100">
+              {analysisResult?.segmentation.model_name ?? "--"}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[10px] uppercase tracking-wide text-slate-500">
+              Risk
+            </p>
+
+            <p
+              className={`text-sm font-semibold ${
+                analysisResult?.risk.level === "HIGH"
+                  ? "text-red-400"
+                  : analysisResult?.risk.level === "MEDIUM"
+                  ? "text-yellow-400"
+                  : analysisResult?.risk.level === "LOW"
+                  ? "text-green-400"
+                  : "text-slate-100"
+              }`}
+            >
+              {analysisResult?.risk.level ?? "--"}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[10px] uppercase tracking-wide text-slate-500">
+              Inference
+            </p>
+
+            <p className="text-sm text-slate-100">
+              {analysisResult
+                ? `${analysisResult.segmentation.inference_time_ms.toFixed(0)} ms`
+                : "--"}
+            </p>
+          </div>
+        </div>
+
       </div>
 
-      {/* ---------- Right Section ---------- */}
+      {/* ================= Right ================= */}
       <div className="flex items-center gap-3">
+
+        {/* Backend Status */}
+        <div
+          className="
+            flex
+            items-center
+            gap-2
+            rounded-md
+            border
+            border-slate-700
+            bg-slate-800
+            px-3
+            py-2
+          "
+        >
+          <Circle
+            size={10}
+            fill="#22c55e"
+            className="text-green-500"
+          />
+
+          <span className="text-xs text-slate-300">
+            Backend Online
+          </span>
+        </div>
 
         {/* Search */}
         <button
@@ -100,7 +197,6 @@ const Header = () => {
           >
             Ctrl K
           </kbd>
-
         </button>
 
         {/* Notifications */}
@@ -141,7 +237,6 @@ const Header = () => {
           <span className="text-sm text-slate-100">
             Guest
           </span>
-
         </button>
 
       </div>

@@ -6,10 +6,74 @@ from app.api.schemas.atlas import (
     CriticalitySummary,
     NodeCriticality,
     EdgeCriticality,
+    GraphData,
 )
 
 from app.engines.atlas.result import AtlasResult
+from pathlib import Path
 
+def serialize_graph(graph):
+    """
+    Convert a NetworkX topology graph into frontend-friendly JSON.
+
+    Node coordinates and edge pixel paths use the same
+    (x, y) coordinate system as GraphBuilder.
+    """
+
+    node_to_id = {}
+
+    nodes = []
+
+    for index, node in enumerate(graph.nodes()):
+
+        node_to_id[node] = index
+
+        nodes.append(
+            {
+                "id": index,
+                "x": int(node[0]),
+                "y": int(node[1]),
+            }
+        )
+
+    edges = []
+
+    for u, v, data in graph.edges(data=True):
+
+        edges.append(
+            {
+                "source": node_to_id[u],
+                "target": node_to_id[v],
+
+                "pixels": [
+                    {
+                        "x": int(point[0]),
+                        "y": int(point[1]),
+                    }
+                    for point in data.get("pixels", [])
+                ],
+
+                "length": int(
+                    data.get("length", 0)
+                ),
+            }
+        )
+
+    return {
+        "nodes": nodes,
+        "edges": edges,
+    }
+
+def to_public_url(path: str | None) -> str | None:
+    if path is None:
+        return None
+
+    path = Path(path).as_posix()
+
+    if path.startswith("outputs/"):
+        return f"/{path}"
+
+    return path
 
 def serialize_atlas_result(
     result: AtlasResult,
@@ -35,6 +99,10 @@ def serialize_atlas_result(
         topology_graph=GraphSummary(
             nodes=result.topology_graph.number_of_nodes(),
             edges=result.topology_graph.number_of_edges(),
+        ),
+
+        topology_graph_data=serialize_graph(
+            result.topology_graph
         ),
 
         criticality=CriticalitySummary(
@@ -91,27 +159,27 @@ def serialize_atlas_result(
 
         visualizations={
             "segmentation_overlay": (
-                result.visualizations.segmentation_overlay
+                to_public_url(result.visualizations.segmentation_overlay)
                 if result.visualizations
                 else None
             ),
             "road_mask": (
-                result.visualizations.road_mask
+                to_public_url(result.visualizations.road_mask)
                 if result.visualizations
                 else None
             ),
             "skeleton": (
-                result.visualizations.skeleton
+                to_public_url(result.visualizations.skeleton)
                 if result.visualizations
                 else None
             ),
             "graph": (
-                result.visualizations.graph
+                to_public_url(result.visualizations.graph)
                 if result.visualizations
                 else None
             ),
             "criticality": (
-                result.visualizations.criticality
+                to_public_url(result.visualizations.criticality)
                 if result.visualizations
                 else None
             ),

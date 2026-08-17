@@ -282,3 +282,16 @@ backend/outputs/*
 !backend/outputs/visualizations/
 backend/outputs/visualizations/*
 !backend/outputs/visualizations/.gitkeep
+imagery/
+venv/
+__pycache__/
+*.pyc
+generated/
+.env
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+
+# Archives
+*.zip

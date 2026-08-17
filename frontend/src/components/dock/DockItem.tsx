@@ -4,16 +4,19 @@ interface DockItemProps {
   icon: LucideIcon;
   label: string;
   active?: boolean;
+  onClick?: () => void;
 }
 
 const DockItem = ({
   icon: Icon,
   label,
   active = false,
+  onClick,
 }: DockItemProps) => {
   return (
     <button
       title={label}
+      onClick={onClick}
       className={`
         group
         flex

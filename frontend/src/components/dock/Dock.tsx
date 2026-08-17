@@ -1,7 +1,10 @@
 import DockItem from "./DockItem";
 import { dockItems } from "./dockItems";
+import { useDock } from "../../context/DockContext";
 
 const Dock = () => {
+  const { activeTab, setActiveTab } = useDock();
+
   return (
     <aside
       className="
@@ -17,12 +20,13 @@ const Dock = () => {
       "
     >
       <div className="flex flex-col items-center gap-3">
-        {dockItems.map((item, index) => (
+        {dockItems.map((item) => (
           <DockItem
             key={item.id}
             icon={item.icon}
             label={item.label}
-            active={index === 0}
+            active={activeTab === item.id}
+            onClick={() => setActiveTab(item.id)}
           />
         ))}
       </div>

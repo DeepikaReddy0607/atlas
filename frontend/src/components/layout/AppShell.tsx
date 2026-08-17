@@ -9,22 +9,24 @@ const AppShell = () => {
     <div
       className="
         grid
-        h-screen
-        w-screen
+        h-full
+        w-full
+        min-h-0
+        min-w-0
         overflow-hidden
         bg-[var(--atlas-bg)]
         text-[var(--atlas-text)]
       "
       style={{
         gridTemplateRows:
-          "var(--header-height) 1fr var(--status-height)",
+          "var(--header-height) minmax(0, 1fr) var(--status-height)",
       }}
     >
       {/* Header */}
       <Header />
 
       {/* Main Area */}
-      <div className="flex overflow-hidden">
+      <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
 
         <Dock />
 

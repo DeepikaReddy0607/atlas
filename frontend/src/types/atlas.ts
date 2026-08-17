@@ -15,8 +15,29 @@ export interface SegmentationResult {
 }
 
 // -----------------------------
-// Graph Statistics
+// Graph
 // -----------------------------
+
+export interface GraphNode {
+  id: number;
+  x: number;
+  y: number;
+}
+export interface GraphPoint {
+  x: number;
+  y: number;
+}
+export interface GraphEdge {
+  source: number;
+  target: number;
+  pixels: GraphPoint[];
+  length: number;
+}
+
+export interface GraphData {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+}
 
 export interface GraphStats {
   nodes: number;
@@ -28,12 +49,12 @@ export interface GraphStats {
 // -----------------------------
 
 export interface NodeCriticality {
-  node: number[];
+  node: [number, number];
   score: number;
 }
 
 export interface EdgeCriticality {
-  edge: number[][];
+  edge: [[number, number], [number,number]];
   score: number;
 }
 
@@ -47,7 +68,7 @@ export interface CriticalityResult {
 // -----------------------------
 
 export interface ResilienceResult {
-  critical_node: number[];
+  critical_node: [number, number];
   connected_components: number;
   largest_component: number;
 }
@@ -69,9 +90,9 @@ export interface RiskResult {
 export interface SimulationResult {
   scenario: string;
 
-  removed_nodes: number[][];
+  removed_nodes: [number, number][];
 
-  removed_edges: number[][][];
+  removed_edges: [[number, number], [number, number]][];
 
   original_nodes: number;
   original_edges: number;
@@ -82,7 +103,7 @@ export interface SimulationResult {
   connected_components: number;
   largest_component: number;
 
-  critical_node: number[];
+  critical_node: [number, number];
 }
 
 // -----------------------------
@@ -107,6 +128,8 @@ export interface AtlasResult {
   pixel_graph: GraphStats;
 
   topology_graph: GraphStats;
+
+  topology_graph_data: GraphData;
 
   criticality: CriticalityResult;
 

@@ -4,12 +4,20 @@ import {
   CircleUserRound,
 } from "lucide-react";
 
+import { useDock } from "../../../context/DockContext";
+
 const HeaderActions = () => {
+  const { setActiveTab } = useDock();
+
+  const openSettings = () => {
+    setActiveTab("settings");
+  };
+
   return (
     <div className="flex items-center gap-2">
-
       {/* Notifications */}
       <button
+        type="button"
         className="
           flex
           h-10
@@ -30,6 +38,8 @@ const HeaderActions = () => {
 
       {/* Settings */}
       <button
+        type="button"
+        onClick={openSettings}
         className="
           flex
           h-10
@@ -50,6 +60,7 @@ const HeaderActions = () => {
 
       {/* User */}
       <button
+        type="button"
         className="
           flex
           h-10
@@ -72,7 +83,6 @@ const HeaderActions = () => {
           className="text-[var(--atlas-text)]"
         />
       </button>
-
     </div>
   );
 };
