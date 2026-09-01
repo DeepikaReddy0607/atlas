@@ -2,7 +2,22 @@ from app.engines.atlas.engine import AtlasEngine
 
 engine = AtlasEngine()
 
-result = engine.analyze("data/sample/roads_gt.png")
+from pathlib import Path
+
+images = list(
+    Path("imagery/test/img").glob("*_sat.jpg")
+)
+
+if not images:
+    raise FileNotFoundError(
+        "No satellite test images found."
+    )
+
+image_path = images[0]
+
+print("Testing image:", image_path)
+
+result = engine.analyze(str(image_path))
 
 print("=" * 50)
 print("ATLAS Engine Test")

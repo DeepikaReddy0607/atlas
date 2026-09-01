@@ -58,15 +58,16 @@ const Inspector = () => {
   return (
     <aside
       className="
-      flex
-      h-full
-      min-h-0
+        flex
+        h-full
+        min-h-0
         w-[var(--inspector-width)]
         flex-col
         overflow-hidden
         border-l
-        border-[var(--atlas-border)]
-        bg-[var(--atlas-surface)]
+        border-[#183522]
+        bg-[#07130D]
+        text-[#E8F0E8]
       "
     >
       {renderPanel()}

@@ -1,0 +1,1071 @@
+/* =========================================================
+   ATLAS HOME — GEOSPATIAL DARK THEME
+========================================================= */
+
+.atlas-home {
+  position: relative;
+  display: grid;
+  grid-template-rows: 4rem minmax(0, 1fr) auto;
+
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      ellipse 58% 65% at 50% 45%,
+      rgba(82, 111, 75, 0.10),
+      transparent 72%
+    ),
+    #080d09;
+
+  color: #e7ece4;
+}
+
+/* =========================================================
+   BACKGROUND GRID
+========================================================= */
+
+.atlas-home__grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  pointer-events: none;
+
+  opacity: 0.38;
+
+  background-image:
+    linear-gradient(
+      rgba(119, 146, 101, 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(119, 146, 101, 0.055) 1px,
+      transparent 1px
+    );
+
+  background-size: 64px 64px;
+
+  mask-image:
+    radial-gradient(
+      ellipse 78% 75% at 50% 48%,
+      #000 15%,
+      transparent 92%
+    );
+}
+
+/* =========================================================
+   AMBIENT LIGHT
+========================================================= */
+
+.atlas-home__glow {
+  position: absolute;
+  z-index: 0;
+
+  width: 560px;
+  height: 560px;
+
+  right: -190px;
+  bottom: -210px;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(100, 145, 76, 0.12),
+      rgba(100, 145, 76, 0.035) 42%,
+      transparent 72%
+    );
+
+  filter: blur(22px);
+
+  animation:
+    atlas-glow-pulse 8s ease-in-out infinite;
+}
+
+/* =========================================================
+   TERRAIN CONTOURS
+========================================================= */
+
+.atlas-home::before,
+.atlas-home::after {
+  content: "";
+
+  position: absolute;
+  z-index: 0;
+
+  width: 130%;
+  height: 260px;
+
+  left: -15%;
+
+  pointer-events: none;
+
+  opacity: 0.075;
+
+  border-top:
+    1px solid rgba(130, 164, 108, 0.8);
+
+  border-radius: 50%;
+
+  transform: rotate(-2deg);
+}
+
+.atlas-home::before {
+  top: 22%;
+
+  box-shadow:
+    0 45px 0 rgba(130, 164, 108, 0.45),
+    0 92px 0 rgba(130, 164, 108, 0.32),
+    0 140px 0 rgba(130, 164, 108, 0.22);
+
+  animation:
+    atlas-contour-drift 22s linear infinite;
+}
+
+.atlas-home::after {
+  top: 63%;
+
+  opacity: 0.045;
+
+  transform:
+    rotate(2deg)
+    scaleX(1.1);
+
+  box-shadow:
+    0 48px 0 rgba(130, 164, 108, 0.35),
+    0 96px 0 rgba(130, 164, 108, 0.22);
+
+  animation:
+    atlas-contour-drift-reverse 28s linear infinite;
+}
+
+/* =========================================================
+   BACKGROUND NETWORK
+========================================================= */
+
+.atlas-home__network {
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  opacity: 0.42;
+}
+
+/*
+   These elements are optional.
+   If you add them in HomeScreen:
+   
+   <div className="atlas-home__network">
+     <span className="atlas-home__node node-1" />
+     <span className="atlas-home__node node-2" />
+     <span className="atlas-home__node node-3" />
+     <span className="atlas-home__node node-4" />
+     <span className="atlas-home__connection connection-1" />
+     <span className="atlas-home__connection connection-2" />
+     <span className="atlas-home__connection connection-3" />
+   </div>
+*/
+
+.atlas-home__node {
+  position: absolute;
+
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+
+  background: #8ebd67;
+
+  box-shadow:
+    0 0 0 3px rgba(142, 189, 103, 0.045),
+    0 0 10px rgba(142, 189, 103, 0.22);
+
+  animation:
+    atlas-node-pulse 5s ease-in-out infinite;
+}
+
+.atlas-home__node.node-1 {
+  top: 25%;
+  left: 13%;
+}
+
+.atlas-home__node.node-2 {
+  top: 31%;
+  left: 24%;
+
+  animation-delay: 1.2s;
+}
+
+.atlas-home__node.node-3 {
+  top: 67%;
+  right: 21%;
+
+  animation-delay: 2.1s;
+}
+
+.atlas-home__node.node-4 {
+  top: 74%;
+  right: 10%;
+
+  animation-delay: 3s;
+}
+
+/* Network connections */
+
+.atlas-home__connection {
+  position: absolute;
+
+  height: 1px;
+
+  transform-origin: left center;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(132, 171, 103, 0.20),
+      rgba(132, 171, 103, 0)
+    );
+}
+
+.atlas-home__connection.connection-1 {
+  width: 180px;
+
+  top: 25.5%;
+  left: 13.2%;
+
+  transform: rotate(28deg);
+}
+
+.atlas-home__connection.connection-2 {
+  width: 230px;
+
+  top: 31.5%;
+  left: 24.2%;
+
+  transform: rotate(43deg);
+}
+
+.atlas-home__connection.connection-3 {
+  width: 170px;
+
+  top: 67.5%;
+  right: 21%;
+
+  transform: rotate(22deg);
+}
+
+/* =========================================================
+   RADAR / GEO CIRCLES
+========================================================= */
+
+.atlas-home__radar {
+  position: absolute;
+
+  z-index: 0;
+
+  right: -120px;
+  bottom: -120px;
+
+  width: 430px;
+  height: 430px;
+
+  border:
+    1px solid rgba(111, 151, 91, 0.06);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.atlas-home__radar::before,
+.atlas-home__radar::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 45px;
+
+  border:
+    1px solid rgba(111, 151, 91, 0.05);
+
+  border-radius: 50%;
+}
+
+.atlas-home__radar::after {
+  inset: 105px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.atlas-home__header {
+  position: relative;
+
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 1.3rem;
+
+  border-bottom:
+    1px solid rgba(157, 176, 148, 0.08);
+
+  background:
+    rgba(8, 13, 9, 0.72);
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.atlas-home__status {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  color: #8da579;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 0.57rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.15em;
+
+  text-transform: uppercase;
+}
+
+.atlas-home__status-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #91c76a;
+
+  box-shadow:
+    0 0 0 4px rgba(145, 199, 106, 0.07),
+    0 0 12px rgba(145, 199, 106, 0.30);
+
+  animation:
+    atlas-status-pulse 3s ease-in-out infinite;
+}
+
+/* =========================================================
+   TELEMETRY
+========================================================= */
+
+.atlas-home__telemetry {
+  position: absolute;
+
+  z-index: 2;
+
+  top: 5.8rem;
+  left: 2.2rem;
+
+  pointer-events: none;
+
+  color: rgba(121, 143, 112, 0.42);
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 0.46rem;
+
+  line-height: 1.8;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+.atlas-home__telemetry-right {
+  position: absolute;
+
+  z-index: 2;
+
+  top: 5.8rem;
+  right: 2.2rem;
+
+  pointer-events: none;
+
+  color: rgba(121, 143, 112, 0.32);
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 0.46rem;
+
+  line-height: 1.8;
+
+  letter-spacing: 0.12em;
+
+  text-align: right;
+
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.atlas-home__content {
+  position: relative;
+
+  z-index: 3;
+
+  display: flex;
+
+  min-height: 0;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding:
+    2rem
+    clamp(1.5rem, 5vw, 5rem);
+
+  transform: translateY(-2.2vh);
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.atlas-home__intro {
+  width: 100%;
+
+  max-width: 720px;
+
+  text-align: center;
+}
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.atlas-home__eyebrow {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.55rem;
+
+  margin:
+    0
+    0
+    1.05rem;
+
+  color: #87a66f;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 0.57rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+}
+
+.atlas-home__eyebrow svg {
+  opacity: 0.8;
+}
+
+/* =========================================================
+   MAIN HEADING
+========================================================= */
+
+.atlas-home h1 {
+  margin: 0;
+
+  color: #edf1eb;
+
+  font-size:
+    clamp(
+      2.35rem,
+      4.5vw,
+      3.65rem
+    );
+
+  /*
+    Deliberately lighter than the previous version.
+  */
+  font-weight: 650;
+
+  letter-spacing: -0.045em;
+
+  line-height: 0.99;
+}
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.atlas-home__description {
+  max-width: 590px;
+
+  margin:
+    1.15rem
+    auto
+    0;
+
+  color: #737e76;
+
+  font-size: 0.79rem;
+
+  line-height: 1.7;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.atlas-home__actions {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  width: min(100%, 760px);
+
+  gap: 0.8rem;
+
+  margin-top: 1.85rem;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.atlas-home__card {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    3rem
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 0.9rem;
+
+  min-height: 116px;
+
+  padding:
+    1rem
+    1.05rem;
+
+  border:
+    1px solid rgba(126, 151, 112, 0.14);
+
+  border-radius: 8px;
+
+  background:
+    rgba(11, 18, 12, 0.82);
+
+  color: #dfe6dc;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.atlas-home__card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(139, 181, 107, 0.34);
+
+  background:
+    rgba(16, 25, 17, 0.94);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+.atlas-home__card:focus-visible {
+  outline:
+    1px solid #91c76a;
+
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   PRIMARY CARD
+========================================================= */
+
+.atlas-home__card--primary {
+  border-color:
+    rgba(137, 177, 105, 0.55);
+
+  background:
+    #4d7048;
+
+  color: #f4f7f1;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.atlas-home__card--primary:hover {
+  border-color:
+    #86ad68;
+
+  background:
+    #55794e;
+
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.32);
+}
+
+/* =========================================================
+   CARD ICON
+========================================================= */
+
+.atlas-home__card-icon {
+  display: grid;
+
+  width: 3rem;
+  height: 3rem;
+
+  place-items: center;
+
+  border:
+    1px solid rgba(139, 170, 121, 0.18);
+
+  border-radius: 7px;
+
+  background:
+    rgba(115, 150, 95, 0.08);
+
+  color: #9bc878;
+}
+
+.atlas-home__card--primary
+.atlas-home__card-icon {
+  border-color:
+    rgba(255, 255, 255, 0.18);
+
+  background:
+    rgba(255, 255, 255, 0.10);
+
+  color: #f3f7ef;
+}
+
+/* =========================================================
+   CARD BODY
+========================================================= */
+
+.atlas-home__card-body {
+  min-width: 0;
+}
+
+.atlas-home__card-kicker {
+  display: block;
+
+  margin-bottom: 0.3rem;
+
+  color: #7d8b7e;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 0.49rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+}
+
+.atlas-home__card--primary
+.atlas-home__card-kicker {
+  color:
+    rgba(239, 247, 234, 0.62);
+}
+
+.atlas-home__card h2 {
+  margin: 0;
+
+  color: #e8eee5;
+
+  font-size: 0.95rem;
+
+  font-weight: 620;
+
+  letter-spacing: -0.012em;
+}
+
+.atlas-home__card--primary h2 {
+  color: #ffffff;
+}
+
+.atlas-home__card p {
+  max-width: 280px;
+
+  margin:
+    0.4rem
+    0
+    0;
+
+  color: #737e75;
+
+  font-size: 0.65rem;
+
+  line-height: 1.45;
+}
+
+.atlas-home__card--primary p {
+  color:
+    rgba(240, 247, 235, 0.68);
+}
+
+/* =========================================================
+   CARD ARROW
+========================================================= */
+
+.atlas-home__card-arrow {
+  color: #778378;
+
+  opacity: 0.78;
+
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+.atlas-home__card--primary
+.atlas-home__card-arrow {
+  color: #edf5e9;
+}
+
+.atlas-home__card:hover
+.atlas-home__card-arrow {
+  transform: translateX(4px);
+
+  opacity: 1;
+}
+
+/* =========================================================
+   HINT
+========================================================= */
+
+.atlas-home__hint {
+  margin:
+    0.9rem
+    0
+    0;
+
+  color: #5f6d62;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 0.48rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.17em;
+
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.atlas-home__footer {
+  position: relative;
+
+  z-index: 5;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding:
+    0.65rem
+    1.3rem;
+
+  border-top:
+    1px solid rgba(157, 176, 148, 0.07);
+
+  color: #535e57;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+  font-size: 0.47rem;
+
+  font-weight: 650;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+.atlas-home__footer span:first-child {
+  color: #7d966e;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes atlas-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes atlas-contour-drift {
+  0% {
+    transform:
+      translateX(-2%)
+      rotate(-2deg);
+  }
+
+  50% {
+    transform:
+      translateX(2%)
+      rotate(-1deg);
+  }
+
+  100% {
+    transform:
+      translateX(-2%)
+      rotate(-2deg);
+  }
+}
+
+@keyframes atlas-contour-drift-reverse {
+  0% {
+    transform:
+      translateX(2%)
+      rotate(2deg)
+      scaleX(1.1);
+  }
+
+  50% {
+    transform:
+      translateX(-2%)
+      rotate(1deg)
+      scaleX(1.1);
+  }
+
+  100% {
+    transform:
+      translateX(2%)
+      rotate(2deg)
+      scaleX(1.1);
+  }
+}
+
+@keyframes atlas-node-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes atlas-status-pulse {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-home__glow,
+  .atlas-home::before,
+  .atlas-home::after,
+  .atlas-home__node,
+  .atlas-home__status-dot {
+    animation: none;
+  }
+
+  .atlas-home__card {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 720px) {
+  .atlas-home__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-home__telemetry,
+  .atlas-home__telemetry-right,
+  .atlas-home__network,
+  .atlas-home__radar {
+    display: none;
+  }
+
+  .atlas-home__content {
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .atlas-home__header {
+    padding: 0 1rem;
+  }
+
+  .atlas-home h1 {
+    font-size: 2.3rem;
+  }
+
+  .atlas-home__description {
+    font-size: 0.74rem;
+  }
+
+  .atlas-home__card {
+    grid-template-columns:
+      2.7rem
+      minmax(0, 1fr)
+      auto;
+
+    min-height: 108px;
+
+    padding: 0.9rem;
+  }
+
+  .atlas-home__card-icon {
+    width: 2.7rem;
+    height: 2.7rem;
+  }
+}
+
+/* =========================================================
+   SHORT SCREENS
+========================================================= */
+
+@media (max-height: 700px) {
+  .atlas-home {
+    grid-template-rows:
+      3.6rem
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .atlas-home__content {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    transform: translateY(-1vh);
+  }
+
+  .atlas-home__eyebrow {
+    margin-bottom: 0.7rem;
+  }
+
+  .atlas-home h1 {
+    font-size: 2.7rem;
+  }
+
+  .atlas-home__description {
+    margin-top: 0.75rem;
+  }
+
+  .atlas-home__actions {
+    margin-top: 1.25rem;
+  }
+
+  .atlas-home__card {
+    min-height: 100px;
+  }
+}

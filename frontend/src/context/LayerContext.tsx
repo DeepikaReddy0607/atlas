@@ -1,11 +1,13 @@
 import {
   createContext,
   useContext,
-  useState,
+  useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 
 import type { Layer } from "../types/layer";
+import { useWorkspace } from "./WorkspaceContext";
 
 interface LayerContextType {
   layers: Layer[];
@@ -32,66 +34,157 @@ export function LayerProvider({
 }: {
   children: ReactNode;
 }) {
-  const [layers, setLayers] =
-    useState<Layer[]>([]);
+  const {
+    activeWorkspace,
+    updateWorkspace,
+  } = useWorkspace();
 
-  const toggleLayer = (id: string) => {
-    setLayers((prev) =>
-      prev.map((layer) =>
-        layer.id === id
-          ? {
+  const layers = activeWorkspace.layers;
+
+  /* ==========================================================
+     Set Layers
+  ========================================================== */
+
+  const setLayers = useCallback<
+    React.Dispatch<React.SetStateAction<Layer[]>>
+  >(
+    (value) => {
+      updateWorkspace(
+        activeWorkspace.id,
+        {
+          layers:
+            typeof value === "function"
+              ? value(activeWorkspace.layers)
+              : value,
+        }
+      );
+    },
+    [
+      activeWorkspace.id,
+      activeWorkspace.layers,
+      updateWorkspace,
+    ]
+  );
+
+  /* ==========================================================
+     Toggle Layer
+  ========================================================== */
+
+  const toggleLayer = useCallback(
+    (id: string) => {
+      updateWorkspace(
+        activeWorkspace.id,
+        {
+          layers:
+            activeWorkspace.layers.map(
+              (layer) =>
+                layer.id === id
+                  ? {
+                      ...layer,
+                      visible:
+                        !layer.visible,
+                    }
+                  : layer
+            ),
+        }
+      );
+    },
+    [
+      activeWorkspace.id,
+      activeWorkspace.layers,
+      updateWorkspace,
+    ]
+  );
+
+  /* ==========================================================
+     Update Opacity
+  ========================================================== */
+
+  const updateOpacity = useCallback(
+    (
+      id: string,
+      opacity: number
+    ) => {
+      updateWorkspace(
+        activeWorkspace.id,
+        {
+          layers:
+            activeWorkspace.layers.map(
+              (layer) =>
+                layer.id === id
+                  ? {
+                      ...layer,
+                      opacity,
+                    }
+                  : layer
+            ),
+        }
+      );
+    },
+    [
+      activeWorkspace.id,
+      activeWorkspace.layers,
+      updateWorkspace,
+    ]
+  );
+
+  /* ==========================================================
+     Reset Layers
+  ========================================================== */
+
+  const resetLayers = useCallback(() => {
+    updateWorkspace(
+      activeWorkspace.id,
+      {
+        layers:
+          activeWorkspace.layers.map(
+            (layer) => ({
               ...layer,
-              visible: !layer.visible,
-            }
-          : layer
-      )
-    );
-  };
 
-  const updateOpacity = (
-    id: string,
-    opacity: number
-  ) => {
-    setLayers((prev) =>
-      prev.map((layer) =>
-        layer.id === id
-          ? {
-              ...layer,
-              opacity,
-            }
-          : layer
-      )
-    );
-  };
+              visible:
+                layer.type === "base"
+                  ? true
+                  : false,
 
-  const resetLayers = () => {
-    setLayers((prev) =>
-      prev.map((layer) => ({
-        ...layer,
-        visible:
-          layer.type === "base"
-            ? true
-            : false,
-        opacity:
-          layer.type === "overlay"
-            ? 0.65
-            : layer.type === "mask"
-            ? 0.85
-            : 1,
-      }))
+              opacity:
+                layer.type === "overlay"
+                  ? 0.65
+                  : layer.type === "mask"
+                  ? 0.85
+                  : 1,
+            })
+          ),
+      }
     );
-  };
+  }, [
+    activeWorkspace.id,
+    activeWorkspace.layers,
+    updateWorkspace,
+  ]);
+
+  /* ==========================================================
+     Context Value
+  ========================================================== */
+
+  const value = useMemo<LayerContextType>(
+    () => ({
+      layers,
+      setLayers,
+      toggleLayer,
+      updateOpacity,
+      resetLayers,
+    }),
+    [
+      layers,
+      setLayers,
+      toggleLayer,
+      updateOpacity,
+      resetLayers,
+    ]
+  );
 
   return (
-    <LayerContext.Provider
-      value={{
-        layers,
-        setLayers,
-        toggleLayer,
-        updateOpacity,
-        resetLayers,
-      }}
-    >
+    <LayerContext.Provider value={value}>
       {children}
     </LayerContext.Provider>
   );

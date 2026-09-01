@@ -295,3 +295,28 @@ generated/
 
 # Archives
 *.zip
+
+# Local model weights
+backend/models/
+RoadGIE/
+
+# Local IDE configuration
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Generated outputs / caches
+backend/outputs/
+backend/cache/
+*.cache
+
+# OS
+.DS_Store
+Thumbs.db

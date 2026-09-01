@@ -10,6 +10,7 @@ import { useAtlasAnalysis } from "../../hooks/useAtlasAnalysis";
 
 import ScenarioCard from "./ScenarioCard";
 import RunSimulationButton from "./RunSimulationButton";
+import { runSimulation } from "../../api/simulationApi";
 
 const SimulationPanel = () => {
   const { analysisResult } = useAtlasAnalysis();
@@ -106,39 +107,33 @@ const SimulationPanel = () => {
    * ---------------------------------------------------------
    */
 
-  const handleRunSimulation = () => {
-    if (!analysisResult || running) {
-      return;
-    }
+    const handleRunSimulation = async () => {
+      if (!analysisResult || running) {
+        return;
+      }
 
-    setError(null);
-    setResult(null);
-
-    /*
-     * The current backend already performs
-     * the critical-node simulation during
-     * /atlas/analyze.
-     *
-     * For now we reuse that result.
-     */
-    if (selectedScenario === "critical") {
       setRunning(true);
+      setError(null);
+      setResult(null);
 
-      setTimeout(() => {
-        setResult(
-          analysisResult.simulation
+      try {
+        const simulationResult =
+          await runSimulation(selectedScenario);
+
+        setResult(simulationResult);
+      } catch (err) {
+        console.error(
+          "Simulation request failed:",
+          err
         );
 
+        setError(
+          "Simulation failed. Please check the backend."
+        );
+      } finally {
         setRunning(false);
-      }, 500);
-
-      return;
-    }
-
-    setError(
-      `${selectedScenario} simulation is not implemented yet.`
-    );
-  };
+      }
+    };
 
   /*
    * ---------------------------------------------------------

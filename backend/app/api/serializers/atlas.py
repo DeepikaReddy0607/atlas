@@ -139,22 +139,26 @@ def serialize_atlas_result(
             "level": result.risk["level"],
             "recommendation": result.risk["recommendation"],
         },
-
-        simulation=SimulationSummary(
-            scenario=simulation.scenario,
-            removed_nodes=simulation.removed_nodes,
-            removed_edges=simulation.removed_edges,
-            original_nodes=simulation.original_nodes,
-            original_edges=simulation.original_edges,
-            remaining_nodes=simulation.remaining_nodes,
-            remaining_edges=simulation.remaining_edges,
-            connected_components=simulation.connected_components,
-            largest_component=simulation.largest_component,
-            critical_node=list(simulation.critical_node)
-            if simulation.critical_node
-            else None,
+        simulation=(
+            SimulationSummary(
+                scenario=simulation.scenario,
+                removed_nodes=simulation.removed_nodes,
+                removed_edges=simulation.removed_edges,
+                original_nodes=simulation.original_nodes,
+                original_edges=simulation.original_edges,
+                remaining_nodes=simulation.remaining_nodes,
+                remaining_edges=simulation.remaining_edges,
+                connected_components=simulation.connected_components,
+                largest_component=simulation.largest_component,
+                critical_node=(
+                    list(simulation.critical_node)
+                    if simulation.critical_node is not None
+                    else None
+                ),
+            )
+            if simulation is not None
+            else None
         ),
-
         recommendation=result.recommendation,
 
         visualizations={

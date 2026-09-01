@@ -2,11 +2,18 @@ import {
   Bell,
   Settings,
   CircleUserRound,
+  Plus,
 } from "lucide-react";
 
 import { useDock } from "../../../context/DockContext";
 
-const HeaderActions = () => {
+interface HeaderActionsProps {
+  onNewAnalysis: () => void;
+}
+
+const HeaderActions = ({
+  onNewAnalysis,
+}: HeaderActionsProps) => {
   const { setActiveTab } = useDock();
 
   const openSettings = () => {
@@ -15,7 +22,44 @@ const HeaderActions = () => {
 
   return (
     <div className="flex items-center gap-2">
+
+      {/* New Analysis */}
+
+      <button
+        type="button"
+        onClick={onNewAnalysis}
+        className="
+          flex
+          h-9
+          items-center
+          gap-2
+          rounded-[var(--radius-md)]
+          border
+          border-[var(--atlas-border)]
+          bg-[var(--atlas-surface)]
+          px-3
+          text-xs
+          font-semibold
+          uppercase
+          tracking-[0.08em]
+          text-[var(--atlas-text-secondary)]
+          transition-all
+          duration-200
+          hover:border-[var(--atlas-primary)]
+          hover:bg-[var(--atlas-elevated)]
+          hover:text-[var(--atlas-text)]
+          active:scale-[0.98]
+        "
+        aria-label="Start new analysis"
+      >
+        <Plus size={16} />
+        <span className="hidden xl:inline">
+          New Analysis
+        </span>
+      </button>
+
       {/* Notifications */}
+
       <button
         type="button"
         className="
@@ -37,6 +81,7 @@ const HeaderActions = () => {
       </button>
 
       {/* Settings */}
+
       <button
         type="button"
         onClick={openSettings}
@@ -59,6 +104,7 @@ const HeaderActions = () => {
       </button>
 
       {/* User */}
+
       <button
         type="button"
         className="
@@ -83,6 +129,7 @@ const HeaderActions = () => {
           className="text-[var(--atlas-text)]"
         />
       </button>
+
     </div>
   );
 };

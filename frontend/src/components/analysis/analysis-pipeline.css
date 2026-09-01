@@ -1,0 +1,1002 @@
+/* =========================================================
+   ATLAS — ANALYSIS PIPELINE
+   Dark geospatial workstation / processing screen
+   ========================================================= */
+
+:root {
+  --pipeline-bg: #020a06;
+  --pipeline-bg-soft: #061109;
+
+  --pipeline-green: #8cff3f;
+  --pipeline-green-soft: #6fdc35;
+  --pipeline-green-dim: rgba(126, 220, 70, 0.32);
+
+  --pipeline-white: #f1f4ed;
+  --pipeline-muted: #87958a;
+  --pipeline-dim: #536158;
+
+  --pipeline-border: rgba(104, 174, 83, 0.24);
+  --pipeline-border-bright: rgba(113, 205, 78, 0.38);
+}
+
+
+/* =========================================================
+   ROOT SCREEN
+   ========================================================= */
+
+.atlas-pipeline {
+  position: relative;
+
+  width: 100%;
+  height: 100dvh;
+  min-height: 560px;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 48%,
+      rgba(49, 103, 42, 0.12),
+      transparent 42%
+    ),
+    linear-gradient(
+      180deg,
+      #020806 0%,
+      #020a06 55%,
+      #010704 100%
+    );
+
+  color: var(--pipeline-white);
+
+  font-family:
+    Inter,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  isolation: isolate;
+}
+
+
+/* =========================================================
+   TECHNICAL GRID
+   ========================================================= */
+
+.atlas-pipeline__grid {
+  position: absolute;
+  inset: 0;
+
+  z-index: -2;
+
+  pointer-events: none;
+
+  opacity: 0.52;
+
+  background-image:
+    linear-gradient(
+      rgba(91, 145, 74, 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(91, 145, 74, 0.055) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    42px 42px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+}
+
+
+/* =========================================================
+   SUBTLE CENTRAL GLOW
+   ========================================================= */
+
+.atlas-pipeline::before {
+  content: "";
+
+  position: absolute;
+
+  width: 620px;
+  height: 620px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(87, 155, 54, 0.055) 0%,
+      rgba(87, 155, 54, 0.018) 38%,
+      transparent 70%
+    );
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.atlas-pipeline__header {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 78px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding:
+    0 clamp(28px, 4vw, 64px);
+
+  border-bottom:
+    1px solid rgba(91, 133, 79, 0.15);
+
+  z-index: 10;
+}
+
+
+/* ATLAS LOGO */
+
+.atlas-pipeline__header .atlas-logo {
+  opacity: 0.30;
+}
+
+
+/* =========================================================
+   HEADER STATUS
+   ========================================================= */
+
+.atlas-pipeline__header-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+
+  font-family:
+    "Space Mono",
+    "Roboto Mono",
+    Consolas,
+    monospace;
+
+  font-size: 10px;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+}
+
+.atlas-pipeline__header-status > span {
+  color: #718078;
+}
+
+.atlas-pipeline__header-status strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--pipeline-green);
+
+  font-weight: 700;
+
+  letter-spacing: 0.13em;
+}
+
+.atlas-pipeline__header-status strong i {
+  width: 7px;
+  height: 7px;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: var(--pipeline-green);
+
+  box-shadow:
+    0 0 7px rgba(140, 255, 63, 0.65);
+
+  animation:
+    pipeline-pulse 1.8s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.atlas-pipeline__content {
+  position: absolute;
+
+  inset:
+    78px 0 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    30px 24px 24px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   CORE CONTENT
+   ========================================================= */
+
+.atlas-pipeline__core {
+  width: min(720px, 92vw);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.atlas-pipeline__eyebrow {
+  position: relative;
+
+  margin: 0 0 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: var(--pipeline-green);
+
+  font-family:
+    "Space Mono",
+    "Roboto Mono",
+    Consolas,
+    monospace;
+
+  font-size: clamp(9px, 0.75vw, 11px);
+
+  font-weight: 700;
+
+  letter-spacing: 0.19em;
+
+  text-transform: uppercase;
+}
+
+.atlas-pipeline__eyebrow::before {
+  content: "";
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--pipeline-green);
+
+  box-shadow:
+    0 0 9px rgba(140, 255, 63, 0.55);
+}
+
+
+/* =========================================================
+   MAIN TITLE
+   ========================================================= */
+
+.atlas-pipeline__core h1 {
+  width: 100%;
+
+  margin: 0;
+
+  color: var(--pipeline-white);
+
+  font-family:
+    Inter,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  /*
+   * Important:
+   * This is deliberately smaller than the previous version.
+   * It prevents horizontal clipping on laptop screens.
+   */
+
+  font-size: clamp(
+    42px,
+    5.3vw,
+    68px
+  );
+
+  line-height: 0.98;
+
+  font-weight: 800;
+
+  letter-spacing: -0.055em;
+
+  text-wrap: balance;
+
+  text-shadow:
+    0 0 30px rgba(220, 240, 220, 0.035);
+}
+
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+.atlas-pipeline__intro {
+  max-width: 520px;
+
+  margin:
+    19px auto 0;
+
+  color: #89968c;
+
+  font-size: clamp(
+    12px,
+    1vw,
+    14px
+  );
+
+  line-height: 1.6;
+
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   PIPELINE CARD
+   ========================================================= */
+
+.atlas-pipeline__stages {
+  position: relative;
+
+  width: min(
+    545px,
+    78vw
+  );
+
+  height: 282px;
+
+  margin:
+    23px 0 0;
+
+  padding:
+    25px 32px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  list-style: none;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid var(--pipeline-border);
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8, 25, 13, 0.88),
+      rgba(3, 14, 8, 0.76)
+    );
+
+  box-shadow:
+    inset 0 0 45px rgba(67, 145, 52, 0.025),
+    0 12px 45px rgba(0, 0, 0, 0.18);
+}
+
+
+/* second inner border */
+
+.atlas-pipeline__stages::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 7px;
+
+  border:
+    1px solid rgba(99, 171, 75, 0.07);
+
+  border-radius: 6px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   PIPELINE ITEMS
+   ========================================================= */
+
+.atlas-pipeline__stages li {
+  position: relative;
+
+  min-height: 22px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  color: #5f6e64;
+
+  font-family:
+    "Space Mono",
+    "Roboto Mono",
+    Consolas,
+    monospace;
+
+  font-size: clamp(
+    10px,
+    0.85vw,
+    12px
+  );
+
+  line-height: 1;
+
+  font-weight: 500;
+
+  letter-spacing: 0.025em;
+
+  text-align: left;
+
+  transition:
+    color 0.25s ease,
+    opacity 0.25s ease;
+}
+
+
+/* =========================================================
+   MARKER
+   ========================================================= */
+
+.atlas-pipeline__marker {
+  position: relative;
+
+  flex: 0 0 auto;
+
+  width: 21px;
+  height: 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid rgba(89, 126, 103, 0.35);
+
+  border-radius: 50%;
+
+  background:
+    rgba(8, 27, 16, 0.72);
+
+  color: transparent;
+
+  z-index: 2;
+}
+
+
+/* inner inactive dot */
+
+.atlas-pipeline__marker i {
+  width: 4px;
+  height: 4px;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: #3d5447;
+}
+
+
+/* =========================================================
+   CONNECTOR
+   ========================================================= */
+
+.atlas-pipeline__connector {
+  position: absolute;
+
+  left: 10px;
+
+  top: 21px;
+  bottom: -17px;
+
+  width: 1px;
+
+  overflow: hidden;
+
+  background:
+    rgba(81, 119, 91, 0.24);
+}
+
+.atlas-pipeline__connector i {
+  position: absolute;
+
+  inset: 0;
+
+  display: block;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(126, 220, 70, 0.52),
+      rgba(126, 220, 70, 0.08)
+    );
+
+  transform:
+    scaleY(0);
+
+  transform-origin:
+    top center;
+
+  transition:
+    transform 0.35s ease;
+}
+
+
+/* =========================================================
+   COMPLETED STAGE
+   ========================================================= */
+
+.atlas-pipeline__stages li.is-complete {
+  color: #9aa69c;
+}
+
+.atlas-pipeline__stages li.is-complete
+.atlas-pipeline__marker {
+  border-color: var(--pipeline-green);
+
+  background:
+    var(--pipeline-green);
+
+  color: #10200d;
+
+  box-shadow:
+    0 0 13px rgba(140, 255, 63, 0.28);
+}
+
+.atlas-pipeline__stages li.is-complete
+.atlas-pipeline__connector i {
+  transform: scaleY(1);
+}
+
+
+/* =========================================================
+   ACTIVE STAGE
+   ========================================================= */
+
+.atlas-pipeline__stages li.is-active {
+  color: var(--pipeline-white);
+
+  font-weight: 700;
+}
+
+.atlas-pipeline__stages li.is-active
+.atlas-pipeline__marker {
+  border-color: var(--pipeline-green);
+
+  box-shadow:
+    0 0 0 4px rgba(140, 255, 63, 0.07),
+    0 0 16px rgba(140, 255, 63, 0.28);
+}
+
+.atlas-pipeline__stages li.is-active
+.atlas-pipeline__marker i {
+  width: 6px;
+  height: 6px;
+
+  background:
+    var(--pipeline-green);
+
+  box-shadow:
+    0 0 7px rgba(140, 255, 63, 0.8);
+
+  animation:
+    pipeline-pulse 1.2s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   FAILURE
+   ========================================================= */
+
+.atlas-pipeline__failure {
+  width: min(545px, 78vw);
+
+  margin-top: 14px;
+
+  padding: 13px 16px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid rgba(190, 75, 55, 0.32);
+
+  border-radius: 7px;
+
+  background:
+    rgba(55, 18, 14, 0.25);
+
+  text-align: left;
+}
+
+.atlas-pipeline__failure p {
+  margin: 0 0 4px;
+
+  color: #e77d68;
+
+  font-family:
+    "Space Mono",
+    monospace;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+.atlas-pipeline__failure span {
+  display: block;
+
+  color: #9b817c;
+
+  font-size: 11px;
+
+  line-height: 1.45;
+}
+
+.atlas-pipeline__failure button {
+  margin-top: 10px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 11px;
+
+  border:
+    1px solid rgba(190, 75, 55, 0.38);
+
+  border-radius: 5px;
+
+  background: transparent;
+
+  color: #d88978;
+
+  font-family:
+    "Space Mono",
+    monospace;
+
+  font-size: 10px;
+
+  cursor: pointer;
+}
+
+.atlas-pipeline__failure button:hover {
+  background:
+    rgba(190, 75, 55, 0.08);
+}
+
+
+/* =========================================================
+   TELEMETRY FOOTER
+   ========================================================= */
+
+.atlas-pipeline__telemetry {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 45px;
+
+  padding:
+    0 clamp(22px, 4vw, 58px);
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-top:
+    1px solid rgba(91, 133, 79, 0.13);
+
+  background:
+    rgba(1, 7, 4, 0.68);
+
+  color: #526057;
+
+  font-family:
+    "Space Mono",
+    "Roboto Mono",
+    Consolas,
+    monospace;
+
+  font-size: 9px;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+.atlas-pipeline__telemetry p {
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #748177;
+
+  font-weight: 600;
+}
+
+.atlas-pipeline__telemetry p > span {
+  width: 6px;
+  height: 6px;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: var(--pipeline-green);
+
+  box-shadow:
+    0 0 8px rgba(140, 255, 63, 0.45);
+}
+
+.atlas-pipeline__telemetry > span {
+  color: #56635a;
+
+  white-space: nowrap;
+}
+
+.atlas-pipeline__telemetry > span i {
+  margin:
+    0 7px;
+
+  color:
+    rgba(140, 255, 63, 0.75);
+
+  font-style: normal;
+}
+
+.atlas-pipeline__telemetry.is-complete p {
+  color: var(--pipeline-green);
+}
+
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes pipeline-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .atlas-pipeline__header {
+    height: 68px;
+  }
+
+  .atlas-pipeline__content {
+    inset:
+      68px 0 45px;
+  }
+
+  .atlas-pipeline__core h1 {
+    font-size: clamp(
+      38px,
+      6.5vw,
+      58px
+    );
+  }
+
+  .atlas-pipeline__stages {
+    width: min(520px, 86vw);
+  }
+}
+
+
+/* =========================================================
+   LAPTOP / SMALL HEIGHT
+   ========================================================= */
+
+@media (max-height: 700px) {
+  .atlas-pipeline__header {
+    height: 60px;
+  }
+
+  .atlas-pipeline__content {
+    inset:
+      60px 0 42px;
+
+    padding-top: 15px;
+  }
+
+  .atlas-pipeline__eyebrow {
+    margin-bottom: 12px;
+  }
+
+  .atlas-pipeline__core h1 {
+    font-size: clamp(
+      38px,
+      5vw,
+      56px
+    );
+  }
+
+  .atlas-pipeline__intro {
+    margin-top: 13px;
+  }
+
+  .atlas-pipeline__stages {
+    height: 250px;
+
+    margin-top: 17px;
+
+    padding:
+      20px 28px;
+  }
+
+  .atlas-pipeline__telemetry {
+    height: 42px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL HEIGHT
+   ========================================================= */
+
+@media (max-height: 620px) {
+  .atlas-pipeline__core h1 {
+    font-size: 38px;
+  }
+
+  .atlas-pipeline__intro {
+    font-size: 11px;
+  }
+
+  .atlas-pipeline__stages {
+    height: 225px;
+
+    margin-top: 13px;
+
+    padding:
+      16px 25px;
+  }
+
+  .atlas-pipeline__stages li {
+    font-size: 10px;
+  }
+
+  .atlas-pipeline__marker {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .atlas-pipeline__header {
+    padding:
+      0 20px;
+  }
+
+  .atlas-pipeline__header-status {
+    font-size: 8px;
+  }
+
+  .atlas-pipeline__content {
+    padding:
+      20px 14px;
+  }
+
+  .atlas-pipeline__core {
+    width: 100%;
+  }
+
+  .atlas-pipeline__core h1 {
+    font-size: clamp(
+      34px,
+      11vw,
+      48px
+    );
+  }
+
+  .atlas-pipeline__intro {
+    max-width: 340px;
+
+    font-size: 11px;
+  }
+
+  .atlas-pipeline__stages {
+    width: 94vw;
+
+    height: 250px;
+
+    padding:
+      21px 22px;
+  }
+
+  .atlas-pipeline__telemetry {
+    padding:
+      0 16px;
+  }
+
+  .atlas-pipeline__telemetry > span {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-pipeline__header-status strong i,
+  .atlas-pipeline__stages li.is-active
+    .atlas-pipeline__marker i {
+    animation: none;
+  }
+
+  .atlas-pipeline__connector i {
+    transition: none;
+  }
+}

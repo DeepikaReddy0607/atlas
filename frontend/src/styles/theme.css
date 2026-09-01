@@ -15,6 +15,9 @@
 
   /* Brand */
   --atlas-primary: #3B82F6;
+  --atlas-accent: #38bdf8;
+  --atlas-accent-soft: rgba(56, 189, 248, 0.16);
+  --atlas-grid: rgba(100, 160, 190, 0.13);
 
   /* Status */
   --atlas-success: #22C55E;

@@ -3,41 +3,79 @@ const StatusBar = () => {
     <footer
       className="
         flex
-        h-[var(--status-height)]
+        h-[30px]
+        shrink-0
         items-center
         justify-between
         border-t
-        border-[var(--atlas-border)]
-        bg-[var(--atlas-surface)]
+        border-[#183522]
+        bg-[#030B07]
         px-4
-        text-xs
-        text-[var(--atlas-text-muted)]
+        font-mono
+        text-[9px]
+        uppercase
+        tracking-[0.08em]
+        text-[#52665A]
       "
     >
+
       {/* Left */}
+
       <div className="flex items-center gap-5">
 
-        <span>Ready</span>
+        <span
+          className="
+            flex
+            items-center
+            gap-2
+            text-[#8BFF3D]
+          "
+        >
+          <span
+            className="
+              h-[5px]
+              w-[5px]
+              rounded-full
+              bg-[#8BFF3D]
+            "
+          />
 
-        <span>Project: Untitled</span>
+          Ready
+        </span>
+
+        <span>
+          Project: Untitled
+        </span>
 
       </div>
+
 
       {/* Center */}
+
       <div className="flex items-center gap-5">
 
-        <span>Zoom 100%</span>
+        <span>
+          Zoom 100%
+        </span>
 
-        <span>Coordinates -- , --</span>
+        <span>
+          Coordinates -- , --
+        </span>
 
       </div>
 
+
       {/* Right */}
+
       <div className="flex items-center gap-5">
 
-        <span>Model: ADE20K</span>
+        <span>
+          Model: ATLAS
+        </span>
 
-        <span>GPU: Idle</span>
+        <span>
+          GPU: Idle
+        </span>
 
       </div>
 

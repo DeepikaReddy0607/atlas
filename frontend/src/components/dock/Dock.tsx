@@ -3,23 +3,32 @@ import { dockItems } from "./dockItems";
 import { useDock } from "../../context/DockContext";
 
 const Dock = () => {
-  const { activeTab, setActiveTab } = useDock();
+  const {
+    activeTab,
+    setActiveTab,
+  } = useDock();
 
   return (
     <aside
       className="
         flex
-        w-[var(--dock-width)]
+        h-full
+        w-full
         flex-col
         items-center
-        justify-between
-        border-r
-        border-[var(--atlas-border)]
-        bg-[var(--atlas-bg)]
-        py-4
+        bg-[#030B07]
       "
     >
-      <div className="flex flex-col items-center gap-3">
+      <nav
+        className="
+          flex
+          w-full
+          flex-1
+          flex-col
+          items-center
+        "
+        aria-label="ATLAS navigation"
+      >
         {dockItems.map((item) => (
           <DockItem
             key={item.id}
@@ -29,6 +38,44 @@ const Dock = () => {
             onClick={() => setActiveTab(item.id)}
           />
         ))}
+      </nav>
+
+      {/* Dock footer */}
+
+      <div
+        className="
+          flex
+          h-[58px]
+          w-full
+          items-center
+          justify-center
+          border-t
+          border-[#183522]
+        "
+      >
+        <div className="flex flex-col items-center gap-1">
+          <span
+            className="
+              h-[6px]
+              w-[6px]
+              rounded-full
+              bg-[#8BFF3D]
+              shadow-[0_0_10px_rgba(139,255,61,0.65)]
+            "
+          />
+
+          <span
+            className="
+              font-mono
+              text-[7px]
+              uppercase
+              tracking-[0.18em]
+              text-[#4F6755]
+            "
+          >
+            GEO-01
+          </span>
+        </div>
       </div>
     </aside>
   );

@@ -23,37 +23,31 @@ export const dockItems: DockItem[] = [
     label: "Imagery",
     icon: Image,
   },
-
   {
     id: "ai",
     label: "AI Analysis",
     icon: Brain,
   },
-
   {
     id: "graph",
     label: "Topology",
     icon: Network,
   },
-
   {
     id: "map",
     label: "Map",
     icon: Map,
   },
-
   {
     id: "risk",
-    label: "Risk & Resilience",
+    label: "Risk",
     icon: ShieldCheck,
   },
-
   {
     id: "simulation",
     label: "Simulation",
     icon: ShieldAlert,
   },
-
   {
     id: "report",
     label: "Reports",

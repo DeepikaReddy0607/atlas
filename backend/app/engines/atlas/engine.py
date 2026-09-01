@@ -53,9 +53,9 @@ class AtlasEngine:
     # Configuration
     # ---------------------------------------------------------
 
-    DEFAULT_MODEL = "openearthmap"
+    DEFAULT_MODEL = "ensemble"
 
-    ROAD_CLASS_ID = 4
+    # ROAD_CLASS_ID = 4
 
     def __init__(
         self,
@@ -155,26 +155,71 @@ class AtlasEngine:
             "\n[2/10] Extracting roads..."
         )
 
-        road_mask = RoadExtractor.extract(
-            segmentation.mask,
-            [self.ROAD_CLASS_ID],
-        )
-
-        import cv2
         import numpy as np
 
-        developed_mask = (
-            segmentation.mask == 3
-        ).astype(np.uint8) * 255
+        output_type = segmentation.metadata.get(
+            "output_type",
+            "semantic",
+        )
 
-        cv2.imwrite(
-            "generated/developed_space.png",
-            developed_mask,
-        )
-        print(
-            "Road class:",
-            self.ROAD_CLASS_ID,
-        )
+        # -----------------------------------------------------
+        # Semantic segmentation models
+        # -----------------------------------------------------
+
+        if output_type == "semantic":
+
+            road_class_id = segmentation.metadata.get(
+                "road_class_id"
+            )
+
+            if road_class_id is None:
+                raise ValueError(
+                    f"Model '{segmentation.model_name}' "
+                    "does not define road_class_id."
+                )
+
+            road_mask = RoadExtractor.extract(
+                segmentation.mask,
+                [road_class_id],
+            )
+
+            print(
+                "Segmentation type: semantic"
+            )
+
+            print(
+                "Road class:",
+                road_class_id,
+            )
+
+        # -----------------------------------------------------
+        # Binary road segmentation models
+        # -----------------------------------------------------
+
+        elif output_type == "binary_road":
+
+            road_mask = (
+                segmentation.mask > 0
+            )
+
+            print(
+                "Segmentation type: binary road"
+            )
+
+            print(
+                "Binary road mask detected."
+            )
+
+        # -----------------------------------------------------
+        # Unknown output type
+        # -----------------------------------------------------
+
+        else:
+
+            raise ValueError(
+                f"Unsupported segmentation output type: "
+                f"{output_type}"
+            )
 
         print(
             "Raw road pixels:",
@@ -191,9 +236,9 @@ class AtlasEngine:
 
         refined_road_mask =RoadExtractor.refine(
                                 road_mask,
-                                min_component_size=50,
-                                kernel_size=5,
-                                closing_iterations=1,
+                                min_component_size=0,
+                                kernel_size=1,
+                                closing_iterations=0,
                                 )
         
 
@@ -283,7 +328,7 @@ class AtlasEngine:
         )
 
         topology_graph = (
-            TopologyBuilder.build_topology(
+            TopologyBuilder.build(
                 pixel_graph
             )
         )

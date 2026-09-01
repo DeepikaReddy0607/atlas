@@ -1,0 +1,428 @@
+/* =========================================================
+   ATLAS HEADER
+========================================================= */
+
+.atlas-header {
+  position: relative;
+  z-index: 20;
+
+  width: 100%;
+  height: 64px;
+  flex-shrink: 0;
+
+  background: #030806;
+  color: #dce7df;
+
+  border-bottom: 1px solid #14241a;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   INNER
+========================================================= */
+
+.atlas-header__inner {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LEFT
+========================================================= */
+
+.atlas-header__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   PROJECT
+========================================================= */
+
+.atlas-header__project,
+.atlas-header__new,
+.atlas-header__backend,
+.atlas-header__search,
+.atlas-header__user {
+  background: #07100b;
+  border: 1px solid #1a3020;
+  color: #cbd8ce;
+
+  box-sizing: border-box;
+}
+
+
+.atlas-header__project {
+  height: 38px;
+
+  padding: 0 16px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+
+  letter-spacing: 0.01em;
+
+  cursor: pointer;
+}
+
+
+.atlas-header__project:hover {
+  background: #0a150e;
+  border-color: #294633;
+}
+
+
+/* =========================================================
+   NEW ANALYSIS
+========================================================= */
+
+.atlas-header__new {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border-radius: 9px;
+
+  color: #718176;
+
+  cursor: pointer;
+}
+
+
+.atlas-header__new:hover {
+  background: #0a150e;
+  border-color: #35553b;
+  color: #a9bcae;
+}
+
+
+/* =========================================================
+   CENTER STATUS
+========================================================= */
+
+.atlas-header__status {
+  position: absolute;
+
+  left: 50%;
+  top: 0;
+
+  transform: translateX(-50%);
+
+  height: 64px;
+
+  display: flex;
+  align-items: stretch;
+
+  background: #050c08;
+
+  border-left: 1px solid #16271c;
+  border-right: 1px solid #16271c;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   STATUS ITEM
+========================================================= */
+
+.atlas-header__status-item {
+  min-width: 105px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 0 15px;
+
+  border-right: 1px solid #14241a;
+
+  box-sizing: border-box;
+}
+
+
+.atlas-header__status-item:first-child {
+  min-width: 125px;
+}
+
+
+.atlas-header__status-item:last-child {
+  border-right: none;
+}
+
+
+.atlas-header__status-item span {
+  margin-bottom: 3px;
+
+  font-size: 9px;
+  font-weight: 500;
+
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+
+  color: #53675a;
+}
+
+
+.atlas-header__status-item strong {
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.2;
+
+  color: #cbd8ce;
+}
+
+
+/* =========================================================
+   RISK
+========================================================= */
+
+.atlas-header__status-item--risk strong {
+  color: #d68a6f;
+}
+
+
+/* =========================================================
+   RIGHT
+========================================================= */
+
+.atlas-header__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-left: auto;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BACKEND
+========================================================= */
+
+.atlas-header__backend {
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 0 11px;
+
+  border-radius: 9px;
+
+  font-size: 11px;
+}
+
+
+.atlas-header__backend svg {
+  color: #65b875;
+}
+
+
+.atlas-header__backend span {
+  color: #87998c;
+}
+
+
+.atlas-header__backend strong {
+  color: #b9c9bd;
+  font-weight: 500;
+}
+
+
+.atlas-header__backend i {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #65c979;
+
+  box-shadow: 0 0 7px rgba(101, 201, 121, 0.35);
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.atlas-header__search {
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0 11px;
+
+  border-radius: 9px;
+
+  color: #718176;
+
+  cursor: pointer;
+}
+
+
+.atlas-header__search:hover {
+  background: #0a150e;
+  border-color: #294633;
+  color: #aab9ae;
+}
+
+
+.atlas-header__search span {
+  font-size: 11px;
+}
+
+
+.atlas-header__search kbd {
+  margin-left: 7px;
+
+  padding: 2px 6px;
+
+  border: 1px solid #24382a;
+  border-radius: 4px;
+
+  font-family: inherit;
+  font-size: 9px;
+
+  color: #657568;
+
+  background: transparent;
+}
+
+
+/* =========================================================
+   ICON BUTTON
+========================================================= */
+
+.atlas-header__icon {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: #68796d;
+
+  cursor: pointer;
+}
+
+
+.atlas-header__icon:hover {
+  border-color: #1c3223;
+  background: #09130d;
+  color: #aab9ae;
+}
+
+
+/* =========================================================
+   USER
+========================================================= */
+
+.atlas-header__user {
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 0 11px;
+
+  border-radius: 9px;
+
+  color: #9cac9f;
+
+  cursor: pointer;
+}
+
+
+.atlas-header__user span {
+  font-size: 11px;
+}
+
+
+.atlas-header__user:hover {
+  background: #0a150e;
+  border-color: #294633;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .atlas-header__status {
+    position: static;
+
+    transform: none;
+
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .atlas-header__status-item {
+    min-width: 85px;
+    padding: 0 10px;
+  }
+
+  .atlas-header__status-item:first-child {
+    min-width: 100px;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .atlas-header__backend {
+    display: none;
+  }
+
+  .atlas-header__status-item {
+    min-width: 75px;
+  }
+
+  .atlas-header__search kbd {
+    display: none;
+  }
+
+}

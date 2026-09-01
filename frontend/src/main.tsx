@@ -9,19 +9,25 @@ import { SimulationProvider } from "./context/SimulationContext";
 import { LayerSelectionProvider } from "./context/LayerSelectionContext";
 import { GraphSelectionProvider } from "./context/GraphSelectionContext";
 import { DockProvider } from "./context/DockContext";
+import { WorkspaceProvider } from "./context/WorkspaceContext";
+import { LayerProvider } from "./context/LayerContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AtlasAnalysisProvider>
-      <SimulationProvider>
-        <LayerSelectionProvider>
-          <GraphSelectionProvider>
-            <DockProvider>
-              <App />
-            </DockProvider>
-          </GraphSelectionProvider>
-        </LayerSelectionProvider>
-      </SimulationProvider>
-    </AtlasAnalysisProvider>
+    <WorkspaceProvider>
+      <AtlasAnalysisProvider>
+        <LayerProvider>
+          <LayerSelectionProvider>
+            <GraphSelectionProvider>
+              <SimulationProvider>
+                <DockProvider>
+                  <App />
+                </DockProvider>
+              </SimulationProvider>
+            </GraphSelectionProvider>
+          </LayerSelectionProvider>
+        </LayerProvider>
+      </AtlasAnalysisProvider>
+    </WorkspaceProvider>
   </StrictMode>
 );

@@ -1,3 +1,7 @@
+// ============================================================
+// ATLAS API TYPES
+// ============================================================
+
 // -----------------------------
 // Segmentation
 // -----------------------------
@@ -14,6 +18,7 @@ export interface SegmentationResult {
   metadata: SegmentationMetadata;
 }
 
+
 // -----------------------------
 // Graph
 // -----------------------------
@@ -23,10 +28,12 @@ export interface GraphNode {
   x: number;
   y: number;
 }
+
 export interface GraphPoint {
   x: number;
   y: number;
 }
+
 export interface GraphEdge {
   source: number;
   target: number;
@@ -44,6 +51,7 @@ export interface GraphStats {
   edges: number;
 }
 
+
 // -----------------------------
 // Criticality
 // -----------------------------
@@ -54,7 +62,10 @@ export interface NodeCriticality {
 }
 
 export interface EdgeCriticality {
-  edge: [[number, number], [number,number]];
+  edge: [
+    [number, number],
+    [number, number]
+  ];
   score: number;
 }
 
@@ -62,6 +73,7 @@ export interface CriticalityResult {
   node: NodeCriticality[];
   edge: EdgeCriticality[];
 }
+
 
 // -----------------------------
 // Resilience
@@ -73,6 +85,7 @@ export interface ResilienceResult {
   largest_component: number;
 }
 
+
 // -----------------------------
 // Risk
 // -----------------------------
@@ -83,6 +96,7 @@ export interface RiskResult {
   recommendation: string;
 }
 
+
 // -----------------------------
 // Simulation
 // -----------------------------
@@ -92,7 +106,10 @@ export interface SimulationResult {
 
   removed_nodes: [number, number][];
 
-  removed_edges: [[number, number], [number, number]][];
+  removed_edges: [
+    [number, number],
+    [number, number]
+  ][];
 
   original_nodes: number;
   original_edges: number;
@@ -106,17 +123,41 @@ export interface SimulationResult {
   critical_node: [number, number];
 }
 
+
 // -----------------------------
 // Visualizations
 // -----------------------------
 
 export interface VisualizationResult {
+  /**
+   * Satellite image with segmentation overlay.
+   *
+   * Usually returned as a base64 string or
+   * an already prepared data URL.
+   */
   segmentation_overlay: string | null;
+
+  /**
+   * Extracted road mask visualization.
+   */
   road_mask: string | null;
+
+  /**
+   * Skeletonized road network.
+   */
   skeleton: string | null;
+
+  /**
+   * Topological graph visualization.
+   */
   graph: string | null;
+
+  /**
+   * Criticality visualization.
+   */
   criticality: string | null;
 }
+
 
 // -----------------------------
 // Root Response

@@ -93,7 +93,7 @@ class AtlasResponse(BaseModel):
 
     risk: dict
 
-    simulation: SimulationSummary
+    simulation: SimulationSummary | None = None
 
     recommendation: str | None = None
 

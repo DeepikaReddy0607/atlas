@@ -1,44 +1,88 @@
-import Header from "./header/Header";
+import Header from "../layout/header/Header";
 import Dock from "../dock/Dock";
 import Workspace from "../workspace/Workspace";
-import Inspector from "../inspector/Inspector";
 import StatusBar from "../statusbar/StatusBar";
+import Inspector from "../inspector/Inspector";
 
-const AppShell = () => {
+interface AppShellProps {
+  onNewAnalysis: () => void;
+}
+
+const AppShell = ({ onNewAnalysis }: AppShellProps) => {
   return (
     <div
       className="
-        grid
-        h-full
+        flex
+        h-dvh
         w-full
-        min-h-0
-        min-w-0
+        flex-col
         overflow-hidden
-        bg-[var(--atlas-bg)]
-        text-[var(--atlas-text)]
+        bg-[#020906]
+        text-[#E8F0E8]
       "
-      style={{
-        gridTemplateRows:
-          "var(--header-height) minmax(0, 1fr) var(--status-height)",
-      }}
     >
-      {/* Header */}
-      <Header />
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
-      {/* Main Area */}
-      <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
+      <Header
+        onNewAnalysis={onNewAnalysis}
+      />
 
-        <Dock />
+      {/* =====================================================
+          MAIN APPLICATION
+      ===================================================== */}
 
-        <Workspace />
+      <div className="flex min-h-0 flex-1">
+
+        {/* ===================================================
+            LEFT NAVIGATION
+        =================================================== */}
+
+        <aside
+          className="
+            w-[88px]
+            shrink-0
+            border-r
+            border-[#183522]
+            bg-[#030B07]
+          "
+        >
+          <Dock />
+        </aside>
+
+        {/* ===================================================
+            WORKSPACE
+        =================================================== */}
+
+        <section
+          className="
+            relative
+            min-h-0
+            min-w-0
+            flex-1
+            overflow-hidden
+            bg-[#020906]
+          "
+        >
+          <Workspace
+            onNewAnalysis={onNewAnalysis}
+          />
+        </section>
+
+        {/* ===================================================
+            RIGHT INSPECTOR
+        =================================================== */}
 
         <Inspector />
 
       </div>
 
-      {/* Bottom Status Bar */}
-      <StatusBar />
+      {/* =====================================================
+          STATUS BAR
+      ===================================================== */}
 
+      <StatusBar />
     </div>
   );
 };

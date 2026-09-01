@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 
 import {
-  ATLAS_SETTINGS_KEY,
   DEFAULT_ATLAS_SETTINGS,
   loadAtlasSettings,
   saveAtlasSettings,

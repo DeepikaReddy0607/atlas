@@ -1,33 +1,34 @@
 const Brand = () => {
   return (
-    <div className="flex select-none flex-col justify-center">
-      <div className="flex items-center gap-2">
-
-        {/* Temporary logo */}
-        <div className="h-3 w-3 rounded-full bg-[var(--atlas-primary)]" />
-
-        <h1
-          className="
-            text-lg
-            font-bold
-            tracking-wide
-            text-[var(--atlas-text)]
-          "
-        >
-          ATLAS
-        </h1>
-
-      </div>
-
-      <p
+    <div
+      className="
+        flex
+        items-center
+        gap-2
+      "
+    >
+      <span
         className="
-          mt-0.5
-          text-xs
-          text-[var(--atlas-text-muted)]
+          font-mono
+          text-[15px]
+          font-semibold
+          uppercase
+          tracking-[0.28em]
+          text-[#8BFF3D]
         "
       >
-        Infrastructure Intelligence
-      </p>
+        ATLAS
+      </span>
+
+      <span
+        className="
+          h-[5px]
+          w-[5px]
+          rounded-full
+          bg-[#8BFF3D]
+          shadow-[0_0_8px_rgba(139,255,61,0.7)]
+        "
+      />
     </div>
   );
 };

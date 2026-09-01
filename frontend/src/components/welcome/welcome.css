@@ -1,0 +1,1342 @@
+/* ============================================================
+   ATLAS WELCOME
+   Geospatial intelligence / command interface
+   ============================================================ */
+
+.atlas-welcome {
+  --welcome-bg: #080c09;
+  --welcome-bg-soft: #0c120d;
+  --welcome-panel: #111811;
+
+  --welcome-bone: #eef1e9;
+  --welcome-muted: #899184;
+  --welcome-dim: #51594e;
+
+  --welcome-olive: #9bc26b;
+  --welcome-olive-soft: #789b55;
+  --welcome-olive-deep: #4d6538;
+
+  --welcome-line: rgba(157, 177, 145, 0.12);
+  --welcome-line-strong: rgba(157, 177, 145, 0.2);
+
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  width: 100%;
+  height: 100dvh;
+  min-height: 620px;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      ellipse 55% 45% at 50% 45%,
+      rgba(93, 122, 62, 0.075),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 30% 45% at 90% 90%,
+      rgba(155, 194, 107, 0.055),
+      transparent 70%
+    ),
+    var(--welcome-bg);
+
+  color: var(--welcome-bone);
+
+  isolation: isolate;
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/* ============================================================
+   AMBIENT BACKGROUND
+   ============================================================ */
+
+.atlas-welcome__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(132, 164, 91, 0.055),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.008),
+      transparent 40%
+    );
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   GRID
+   ============================================================ */
+
+.atlas-welcome__grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background-image:
+    linear-gradient(
+      var(--welcome-line) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      var(--welcome-line) 1px,
+      transparent 1px
+    );
+
+  background-size: 64px 64px;
+
+  mask-image:
+    radial-gradient(
+      ellipse 72% 68% at 50% 45%,
+      #000 15%,
+      transparent 90%
+    );
+
+  opacity: 0.75;
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   TOPOGRAPHIC CONTOURS
+   ============================================================ */
+
+.atlas-welcome__contours {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 0;
+
+  opacity: 0.6;
+
+  pointer-events: none;
+}
+
+.atlas-welcome__contours path {
+  fill: none;
+
+  stroke:
+    rgba(119, 151, 79, 0.3);
+
+  stroke-width: 1;
+
+  stroke-dasharray: 2600;
+  stroke-dashoffset: 2600;
+
+  animation:
+    atlas-contour-draw
+    4s
+    cubic-bezier(.16, 1, .3, 1)
+    forwards;
+}
+
+.atlas-welcome__contours path:nth-child(2) {
+  opacity: 0.45;
+  animation-delay: 0.15s;
+}
+
+.atlas-welcome__contours path:nth-child(3) {
+  opacity: 0.55;
+  animation-delay: 0.3s;
+}
+
+.atlas-welcome__contours path:nth-child(4) {
+  opacity: 0.4;
+  animation-delay: 0.45s;
+}
+
+.atlas-welcome__contours path:nth-child(5) {
+  opacity: 0.35;
+  animation-delay: 0.6s;
+}
+
+@keyframes atlas-contour-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+
+/* ============================================================
+   NETWORK FIELD
+   ============================================================ */
+
+.atlas-welcome__network {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+.atlas-welcome__network-line {
+  vector-effect: non-scaling-stroke;
+
+  stroke:
+    rgba(119, 157, 78, 0.5);
+
+  stroke-width: 0.08;
+
+  stroke-dasharray: 0.45 0.45;
+}
+
+.atlas-welcome__network-node {
+  vector-effect: non-scaling-stroke;
+
+  fill: var(--welcome-olive);
+
+  filter:
+    drop-shadow(
+      0 0 5px
+      rgba(155, 194, 107, 0.45)
+    );
+}
+
+
+/* ============================================================
+   RADAR
+   ============================================================ */
+
+.atlas-welcome__radar {
+  position: absolute;
+
+  right: -150px;
+  bottom: -150px;
+
+  width: 520px;
+  height: 520px;
+
+  border:
+    1px solid
+    rgba(116, 146, 79, 0.17);
+
+  border-radius: 50%;
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+.atlas-welcome__radar::before,
+.atlas-welcome__radar::after {
+  content: "";
+
+  position: absolute;
+
+  border:
+    1px solid
+    rgba(116, 146, 79, 0.12);
+
+  border-radius: 50%;
+}
+
+.atlas-welcome__radar::before {
+  inset: 60px;
+}
+
+.atlas-welcome__radar::after {
+  inset: 120px;
+}
+
+.atlas-welcome__radar-sweep {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+}
+
+.atlas-welcome__radar-sweep::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(155, 194, 107, 0.16),
+      transparent 30%
+    );
+
+  animation:
+    atlas-radar-sweep
+    6s
+    linear
+    infinite;
+}
+
+@keyframes atlas-radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   REGISTRATION MARKS
+   ============================================================ */
+
+.atlas-welcome__registration {
+  position: absolute;
+
+  width: 15px;
+  height: 15px;
+
+  z-index: 1;
+
+  opacity: 0.28;
+
+  pointer-events: none;
+}
+
+.atlas-welcome__registration::before,
+.atlas-welcome__registration::after {
+  content: "";
+
+  position: absolute;
+
+  background:
+    rgba(182, 198, 170, 0.55);
+}
+
+.atlas-welcome__registration::before {
+  top: 50%;
+  left: 0;
+
+  width: 100%;
+  height: 1px;
+}
+
+.atlas-welcome__registration::after {
+  top: 0;
+  left: 50%;
+
+  width: 1px;
+  height: 100%;
+}
+
+.atlas-welcome__registration--tl {
+  top: 28px;
+  left: 28px;
+}
+
+.atlas-welcome__registration--tr {
+  top: 28px;
+  right: 28px;
+}
+
+.atlas-welcome__registration--bl {
+  bottom: 28px;
+  left: 28px;
+}
+
+.atlas-welcome__registration--br {
+  right: 28px;
+  bottom: 28px;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.atlas-welcome__header {
+  position: absolute;
+
+  top: 28px;
+  left: 48px;
+  right: 48px;
+
+  z-index: 5;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  font-family:
+    "JetBrains Mono",
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+  font-size: 10px;
+
+  line-height: 1.7;
+
+  letter-spacing: 0.08em;
+
+  color: var(--welcome-dim);
+
+  text-transform: uppercase;
+}
+
+.atlas-welcome__header-right {
+  text-align: right;
+}
+
+.atlas-welcome__header-live {
+  color: var(--welcome-muted);
+}
+
+
+/* ============================================================
+   CORE
+   ============================================================ */
+
+.atlas-welcome__core {
+  position: relative;
+
+  z-index: 3;
+
+  width: min(680px, 92vw);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  transform: translateY(-1%);
+}
+
+
+/* ============================================================
+   LOGO MARK
+   ============================================================ */
+
+.atlas-welcome__mark {
+  width: 54px;
+  height: 54px;
+
+  margin-bottom: 18px;
+}
+
+.atlas-welcome__mark svg {
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
+}
+
+.atlas-welcome__mark line {
+  fill: none;
+
+  stroke:
+    var(--welcome-olive);
+
+  stroke-width: 1.4;
+
+  stroke-linecap: round;
+}
+
+.atlas-welcome__mark rect {
+  fill: var(--welcome-olive);
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.atlas-welcome__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  min-height: 16px;
+
+  font-family:
+    "JetBrains Mono",
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+  font-size: 10px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.18em;
+
+  color: var(--welcome-muted);
+
+  text-transform: uppercase;
+}
+
+.atlas-welcome__status-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background:
+    var(--welcome-olive);
+
+  box-shadow:
+    0 0 10px
+    rgba(155, 194, 107, 0.55);
+
+  animation:
+    atlas-status-pulse
+    1.8s
+    ease-in-out
+    infinite;
+}
+
+@keyframes atlas-status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+
+/* ============================================================
+   WORDMARK
+   ============================================================ */
+
+.atlas-welcome__wordmark-wrap {
+  overflow: hidden;
+
+  margin-top: 10px;
+}
+
+.atlas-welcome__wordmark {
+  margin: 0;
+
+  font-family:
+    "Space Grotesk",
+    Inter,
+    sans-serif;
+
+  font-size:
+    clamp(72px, 12vw, 132px);
+
+  font-weight: 700;
+
+  line-height: 0.95;
+
+  letter-spacing: 0.105em;
+
+  color:
+    var(--welcome-bone);
+}
+
+
+/* ============================================================
+   SUBTITLE
+   ============================================================ */
+
+.atlas-welcome__subtitle {
+  margin: 17px 0 0;
+
+  font-family:
+    "JetBrains Mono",
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+
+  letter-spacing: 0.31em;
+
+  color:
+    var(--welcome-muted);
+
+  text-transform: uppercase;
+}
+
+
+/* ============================================================
+   DOT INDICATOR
+   ============================================================ */
+
+.atlas-welcome__dots {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin: 32px 0 27px;
+}
+
+.atlas-welcome__dots span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background:
+    var(--welcome-dim);
+}
+
+.atlas-welcome__dots span.is-active {
+  background:
+    var(--welcome-olive);
+
+  box-shadow:
+    0 0 9px
+    rgba(155, 194, 107, 0.65);
+}
+
+
+/* ============================================================
+   STATEMENT
+   ============================================================ */
+
+.atlas-welcome__statement {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  font-family:
+    "Space Grotesk",
+    Inter,
+    sans-serif;
+
+  font-size:
+    clamp(21px, 2.65vw, 28px);
+
+  font-weight: 500;
+
+  line-height: 1.52;
+
+  letter-spacing: 0.015em;
+
+  color:
+    var(--welcome-muted);
+}
+
+.atlas-welcome__statement strong {
+  color:
+    var(--welcome-olive);
+
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   PROGRESS
+   ============================================================ */
+
+.atlas-welcome__progress {
+  width: min(480px, 84vw);
+
+  margin-top: 38px;
+}
+
+.atlas-welcome__progress-top {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 9px;
+
+  font-family:
+    "JetBrains Mono",
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+  font-size: 10px;
+
+  letter-spacing: 0.08em;
+
+  color:
+    var(--welcome-muted);
+
+  text-transform: uppercase;
+}
+
+.atlas-welcome__ready {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color:
+    var(--welcome-olive);
+}
+
+.atlas-welcome__ready i {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background:
+    var(--welcome-olive);
+
+  box-shadow:
+    0 0 8px
+    rgba(155, 194, 107, 0.5);
+}
+
+.atlas-welcome__progress-track {
+  position: relative;
+
+  width: 100%;
+  height: 2px;
+
+  overflow: hidden;
+
+  background:
+    rgba(151, 170, 138, 0.16);
+}
+
+.atlas-welcome__progress-fill {
+  position: absolute;
+
+  inset: 0 auto 0 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--welcome-olive-deep),
+      var(--welcome-olive)
+    );
+
+  box-shadow:
+    0 0 12px
+    rgba(155, 194, 107, 0.35);
+}
+
+.atlas-welcome__stages {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 12px;
+
+  font-family:
+    "JetBrains Mono",
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+  font-size: 8px;
+
+  letter-spacing: 0.055em;
+
+  color:
+    var(--welcome-dim);
+
+  text-transform: uppercase;
+}
+
+.atlas-welcome__stages span {
+  transition:
+    color 0.35s ease,
+    text-shadow 0.35s ease;
+}
+
+.atlas-welcome__stages span::before {
+  content: "";
+
+  display: inline-block;
+
+  width: 3px;
+  height: 3px;
+
+  margin-right: 5px;
+
+  vertical-align: middle;
+
+  border-radius: 50%;
+
+  background:
+    currentColor;
+}
+
+.atlas-welcome__stages span.is-lit {
+  color:
+    var(--welcome-olive);
+
+  text-shadow:
+    0 0 8px
+    rgba(155, 194, 107, 0.3);
+}
+
+
+/* ============================================================
+   ENTER BUTTON
+   ============================================================ */
+
+.atlas-welcome__enter {
+  margin-top: 34px;
+}
+
+.atlas-welcome__enter button {
+  position: relative;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-width: 220px;
+
+  justify-content: center;
+
+  padding: 17px 38px;
+
+  border:
+    1px solid
+    rgba(117, 151, 81, 0.48);
+
+  background:
+    rgba(111, 143, 73, 0.035);
+
+  color:
+    var(--welcome-bone);
+
+  font-family:
+    "JetBrains Mono",
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+  font-size: 11px;
+
+  font-weight: 500;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.4s ease,
+    transform 0.3s ease;
+}
+
+.atlas-welcome__enter button::before {
+  content: "";
+
+  position: absolute;
+
+  inset: -1px;
+
+  pointer-events: none;
+
+  box-shadow:
+    0 0 0 0
+    rgba(155, 194, 107, 0.18);
+
+  transition:
+    box-shadow 0.5s ease;
+}
+
+.atlas-welcome__enter button:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  border-color:
+    var(--welcome-olive);
+
+  background:
+    rgba(155, 194, 107, 0.055);
+}
+
+.atlas-welcome__enter button:hover:not(:disabled)::before {
+  box-shadow:
+    0 0 28px 2px
+    rgba(155, 194, 107, 0.13);
+}
+
+.atlas-welcome__enter button:disabled {
+  cursor: default;
+  opacity: 0.25;
+}
+
+.atlas-welcome__arrow {
+  font-size: 16px;
+
+  transition:
+    transform 0.3s ease;
+}
+
+.atlas-welcome__enter button:hover:not(:disabled)
+.atlas-welcome__arrow {
+  transform: translateX(5px);
+}
+
+.atlas-welcome__enter button:focus-visible {
+  outline:
+    2px solid
+    var(--welcome-olive);
+
+  outline-offset: 4px;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.atlas-welcome__footer {
+  position: absolute;
+
+  left: 48px;
+  right: 48px;
+  bottom: 27px;
+
+  z-index: 5;
+
+  display: grid;
+
+  grid-template-columns: 1fr auto 1fr;
+
+  align-items: end;
+
+  gap: 30px;
+
+  font-family:
+    "JetBrains Mono",
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+  font-size: 9px;
+
+  line-height: 1.7;
+
+  letter-spacing: 0.07em;
+
+  color:
+    var(--welcome-dim);
+
+  text-transform: uppercase;
+}
+
+.atlas-welcome__footer nav {
+  display: flex;
+
+  gap: 22px;
+
+  color:
+    var(--welcome-dim);
+}
+
+.atlas-welcome__footer-status {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    var(--welcome-muted);
+}
+
+.atlas-welcome__footer-status i {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background:
+    var(--welcome-olive);
+
+  box-shadow:
+    0 0 7px
+    rgba(155, 194, 107, 0.5);
+
+  animation:
+    atlas-status-pulse
+    1.8s
+    ease-in-out
+    infinite;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .atlas-welcome__header {
+    left: 28px;
+    right: 28px;
+  }
+
+  .atlas-welcome__footer {
+    left: 28px;
+    right: 28px;
+  }
+
+  .atlas-welcome__footer nav {
+    display: none;
+  }
+
+  .atlas-welcome__footer {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .atlas-welcome {
+    min-height: 580px;
+  }
+
+  .atlas-welcome__header {
+    top: 20px;
+
+    left: 20px;
+    right: 20px;
+
+    font-size: 8px;
+  }
+
+  .atlas-welcome__footer {
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+
+    font-size: 8px;
+  }
+
+  .atlas-welcome__wordmark {
+    font-size: clamp(60px, 18vw, 92px);
+  }
+
+  .atlas-welcome__subtitle {
+    max-width: 90vw;
+
+    font-size: 8px;
+
+    letter-spacing: 0.2em;
+  }
+
+  .atlas-welcome__statement {
+    font-size: 20px;
+  }
+
+  .atlas-welcome__progress {
+    width: 82vw;
+  }
+
+  .atlas-welcome__stages {
+    font-size: 6px;
+  }
+
+  .atlas-welcome__stages span:nth-child(2),
+  .atlas-welcome__stages span:nth-child(3) {
+    display: none;
+  }
+
+  .atlas-welcome__stages span {
+    font-size: 7px;
+  }
+
+  .atlas-welcome__radar {
+    width: 360px;
+    height: 360px;
+
+    right: -150px;
+    bottom: -130px;
+  }
+}
+
+
+/* ============================================================
+   SHORT VIEWPORT
+   Prevent scrolling and keep composition intact.
+   ============================================================ */
+
+@media (max-height: 720px) {
+  .atlas-welcome__mark {
+    width: 42px;
+    height: 42px;
+
+    margin-bottom: 10px;
+  }
+
+  .atlas-welcome__wordmark {
+    font-size: clamp(62px, 10vw, 92px);
+  }
+
+  .atlas-welcome__subtitle {
+    margin-top: 10px;
+  }
+
+  .atlas-welcome__dots {
+    margin-top: 18px;
+    margin-bottom: 15px;
+  }
+
+  .atlas-welcome__statement {
+    font-size: 20px;
+    line-height: 1.35;
+  }
+
+  .atlas-welcome__progress {
+    margin-top: 24px;
+  }
+
+  .atlas-welcome__enter {
+    margin-top: 22px;
+  }
+
+  .atlas-welcome__enter button {
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-welcome__contours path,
+  .atlas-welcome__radar-sweep::before,
+  .atlas-welcome__status-dot,
+  .atlas-welcome__footer-status i {
+    animation: none;
+  }
+
+  .atlas-welcome__enter button,
+  .atlas-welcome__enter button::before,
+  .atlas-welcome__arrow {
+    transition: none;
+  }
+}
+.welcome-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+  color: var(--atlas-text-secondary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.welcome-status__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.welcome-status__label > span {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #a8b09f;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.welcome-status__label > span.is-loading {
+  animation: atlas-status-pulse 0.9s ease-in-out infinite;
+}
+
+.welcome-status__label > span.is-ready {
+  background: #789b55;
+  box-shadow: 0 0 0 4px rgba(120, 155, 85, 0.12);
+}
+
+.welcome-status strong {
+  color: #26352a;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.welcome-progress {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(76, 102, 58, 0.16);
+}
+
+.welcome-progress__fill {
+  height: 100%;
+  background: #6f8f4e;
+  box-shadow: 0 0 10px rgba(111, 143, 78, 0.3);
+  transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.welcome-progress__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.65rem;
+
+  color: #879084;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.53rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.welcome-progress__meta span {
+  white-space: nowrap;
+}
+
+@keyframes atlas-status-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-status__label > span.is-loading {
+    animation: none;
+  }
+
+  .welcome-progress__fill {
+    transition: none;
+  }
+}
+
+.atlas-workspace__canvas {
+  position: relative;
+  width: 100%;
+  height: 390px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(120, 255, 60, 0.16);
+  border-radius: 8px;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(70, 180, 55, 0.08),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5, 18, 10, 0.96),
+      rgba(3, 11, 7, 0.98)
+    );
+
+  box-shadow:
+    inset 0 0 80px rgba(60, 180, 70, 0.035);
+}
+
+.atlas-workspace__canvas-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(220, 235, 220, 0.72);
+}
+
+.atlas-workspace__canvas-meta {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(150, 175, 155, 0.42);
+}
+
+.atlas-workspace__canvas-header {
+  position: absolute;
+  inset: 0 0 auto 0;
+
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+
+  border-bottom: 1px solid rgba(120, 255, 60, 0.08);
+
+  background: rgba(3, 12, 7, 0.38);
+
+  z-index: 5;
+}
+
+.atlas-workspace__empty-map {
+  position: absolute;
+  inset: 46px 0 0 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  color: rgba(125, 165, 130, 0.35);
+}
+
+.atlas-workspace__empty-map svg {
+  color: rgba(130, 220, 100, 0.28);
+}
+
+.atlas-workspace__empty-map strong {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.atlas-workspace__empty-map span {
+  font-size: 10px;
+  color: rgba(130, 155, 135, 0.35);
+}
