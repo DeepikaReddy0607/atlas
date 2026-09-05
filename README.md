@@ -1,31 +1,567 @@
-# Project ATLAS
+The ensemble produces the final binary road mask used by the downstream ATLAS pipeline.
 
-> Turning Satellite Imagery into Actionable Intelligence.
+🧩 Road Network Reconstruction
 
-Project ATLAS is an AI-powered geospatial intelligence platform that combines computer vision, spatial analysis, graph reasoning, and explainable AI to transform satellite imagery into actionable infrastructure insights.
+The predicted road mask is transformed into a structural representation of the road network.
 
-## Vision
+The pipeline includes:
 
-ATLAS aims to assist disaster management agencies, mapping organizations, and researchers by automating infrastructure monitoring and providing evidence-backed decision support.
+Road segmentation
+Post-processing
+Skeletonization
+Graph construction
+Node extraction
+Edge extraction
+Topological analysis
 
-## Planned Modules
+This allows ATLAS to move from pixel-level computer vision to network-level analysis.
 
-- Atlas Core
-- Atlas Vision
-- Atlas Geo
-- Atlas Reason
-- Atlas Intelligence
+🕸️ Topology & Criticality Analysis
 
-## Tech Stack
+The extracted road network is represented as a graph.
 
-- FastAPI
-- React
-- PostgreSQL + PostGIS
-- PyTorch
-- Rasterio
-- GeoPandas
-- Docker
+ATLAS analyses:
 
-## Project Status
+Network nodes
+Network edges
+Connectivity
+Connected components
+Largest connected component
+Critical nodes
+Critical edges
+Structural importance
 
-🚧 Active Development
+This makes it possible to identify infrastructure whose failure could significantly affect network connectivity.
+
+⚠️ Network Resilience Simulation
+
+ATLAS can simulate infrastructure failures and observe their effect on the road network.
+
+Supported failure scenarios include:
+
+Critical node failure
+Selected node failure
+Critical edge failure
+Selected edge failure
+
+Example workflow:
+
+Original Road Network
+        ↓
+Identify Critical Element
+        ↓
+Remove Node / Edge
+        ↓
+Recalculate Connectivity
+        ↓
+Measure Network Fragmentation
+        ↓
+Estimate Resilience Impact
+
+This allows the system to investigate questions such as:
+
+What happens to the road network if an important junction becomes unavailable?
+
+📊 Risk Assessment
+
+ATLAS derives resilience-related metrics from the resulting graph structure.
+
+The system evaluates quantities including:
+
+Connected components
+Largest connected component
+Network fragmentation
+Average Resilience Index (ARI)
+Risk classification
+Recommendations
+
+The goal is to translate graph-level changes into interpretable infrastructure-risk information.
+
+🗺️ Interactive Geospatial Workstation
+
+The frontend is designed as a geospatial analysis workstation rather than a simple form-based application.
+
+The interface integrates:
+
+Image upload
+Segmentation visualization
+Layer-based visualization
+Analysis inspection
+Topology visualization
+Criticality visualization
+Resilience simulation
+Risk assessment
+Report generation
+📄 Automated Reporting
+
+ATLAS generates visual outputs and reports from the computed analysis results.
+
+The reporting workflow can present:
+
+Input analysis
+Segmentation results
+Network structure
+Critical elements
+Resilience metrics
+Risk assessment
+Simulation results
+Recommendations
+System Architecture
+                         ┌──────────────────────┐
+                         │     Satellite Image  │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │   ATLAS FastAPI API  │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                  ┌─────────────────────────────────┐
+                  │     Road Segmentation Ensemble  │
+                  │                                 │
+                  │  D-LinkNet34 ──────── 0.65      │
+                  │  RoadGIE ──────────── 0.35      │
+                  │                                 │
+                  │  Threshold = 0.275             │
+                  └───────────────┬─────────────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │     Road Mask       │
+                       └──────────┬──────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │  Skeletonization    │
+                       └──────────┬──────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │    Road Graph       │
+                       └──────────┬──────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │  Topology Analysis  │
+                       └──────────┬──────────┘
+                                  │
+                    ┌─────────────┼─────────────┐
+                    ▼             ▼             ▼
+              Criticality     Resilience      Risk
+                    │             │             │
+                    └─────────────┼─────────────┘
+                                  ▼
+                       ┌─────────────────────┐
+                       │ Failure Simulation  │
+                       └──────────┬──────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │ Visualization &     │
+                       │ Reporting           │
+                       └─────────────────────┘
+Machine Learning Pipeline
+
+ATLAS uses an ensemble-based road extraction approach.
+
+Input Satellite Image
+        │
+        ├────────────────┐
+        ▼                ▼
+  D-LinkNet34         RoadGIE
+        │                │
+        ▼                ▼
+ Probability Map    Probability Map
+        │                │
+        └────────┬───────┘
+                 ▼
+        Weighted Ensemble
+                 │
+        0.65 × D-LinkNet34
+        0.35 × RoadGIE
+                 │
+                 ▼
+        Threshold = 0.275
+                 │
+                 ▼
+          Binary Road Mask
+
+The ensemble combines the probability outputs of the two segmentation models before applying the final threshold.
+
+Graph & Resilience Pipeline
+
+Once the road mask is generated, ATLAS moves from computer vision into network analysis.
+
+Binary Road Mask
+       ↓
+Skeleton
+       ↓
+Graph Construction
+       ↓
+Nodes + Edges
+       ↓
+Topology Analysis
+       ↓
+Criticality Detection
+       ↓
+Failure Simulation
+       ↓
+Connectivity Analysis
+       ↓
+Resilience / Risk Assessment
+
+This connects image-level perception with graph-level reasoning.
+
+Example Analysis
+
+A typical ATLAS analysis can produce information such as:
+
+Road Network
+├── Number of nodes
+├── Number of edges
+├── Critical node
+├── Critical edges
+├── Connected components
+├── Largest connected component
+├── Resilience metrics
+├── Risk classification
+└── Failure simulation results
+
+For example, a critical-node failure can remove an important junction and recompute the resulting network connectivity.
+
+This allows ATLAS to investigate:
+
+How vulnerable is the extracted road network to the failure of an important infrastructure component?
+
+Technology Stack
+Frontend
+React
+TypeScript
+Vite
+Tailwind CSS
+Framer Motion
+Lucide
+Recharts
+React Query
+Axios
+Backend
+Python
+FastAPI
+Uvicorn
+Pydantic
+Machine Learning
+PyTorch
+Torchvision
+Segmentation Models PyTorch
+timm
+Transformers
+OpenCV
+Pillow
+NumPy
+SciPy
+scikit-image
+Geospatial & Graph Processing
+Rasterio
+NetworkX
+Affine
+OpenCV
+NumPy
+Visualization & Reporting
+Matplotlib
+ReportLab
+Development & Reproducibility
+Docker
+Docker Compose
+Git
+Git LFS
+Project Structure
+atlas/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── engines/
+│   │   └── main.py
+│   │
+│   ├── models/
+│   │   └── dlinknet/
+│   │
+│   ├── outputs/
+│   ├── requirements-full.txt
+│   └── requirements-render.txt
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── pages/
+│   │   └── api/
+│   └── package.json
+│
+├── RoadGIE/
+│   └── checkpoint/
+│
+├── docker/
+│   └── Dockerfile
+│
+├── .gitattributes
+├── .gitignore
+└── README.md
+Running ATLAS Locally
+Prerequisites
+
+Install:
+
+Python 3.12+
+Node.js
+npm
+Git
+Git LFS
+Docker Desktop (optional)
+1. Clone the Repository
+git clone https://github.com/DeepikaReddy0607/atlas.git
+cd atlas
+
+Initialize Git LFS:
+
+git lfs install
+git lfs pull
+2. Backend Setup
+
+Navigate to the backend:
+
+cd backend
+
+Create a virtual environment:
+
+python -m venv venv
+
+Windows:
+
+venv\Scripts\activate
+
+Install dependencies:
+
+pip install -r requirements-full.txt
+
+Start the FastAPI server:
+
+uvicorn app.main:app --reload
+
+The API will be available at:
+
+http://127.0.0.1:8000
+
+Health check:
+
+http://127.0.0.1:8000/health
+
+Interactive API documentation:
+
+http://127.0.0.1:8000/docs
+3. Frontend Setup
+
+Open another terminal:
+
+cd frontend
+
+Install dependencies:
+
+npm install
+
+Start the development server:
+
+npm run dev
+
+Open the Vite URL displayed in the terminal.
+
+4. Docker
+
+ATLAS includes a Dockerized backend for reproducible execution.
+
+Build the backend image:
+
+docker build -f docker/Dockerfile -t atlas .
+
+Run the container:
+
+docker run -p 8000:8000 atlas
+
+Health check:
+
+http://localhost:8000/health
+
+The Dockerized backend has been tested locally through the complete inference pipeline, including:
+
+Model loading
+File upload
+D-LinkNet34 inference
+RoadGIE inference
+Ensemble inference
+Output generation
+Model Weights
+
+The production model weights are managed using Git LFS because of their size.
+
+The production ensemble consists of:
+
+D-LinkNet34
+RoadGIE
+
+Pull the model files after cloning:
+
+git lfs install
+git lfs pull
+Production Ensemble
+
+The final ATLAS road-extraction configuration is:
+
+Component	Configuration
+Model 1	D-LinkNet34
+Model 2	RoadGIE
+D-LinkNet34 Weight	0.65
+RoadGIE Weight	0.35
+Ensemble Threshold	0.275
+Inference Device	CPU
+
+The ensemble produces the road probability map used by the downstream topology and resilience pipeline.
+
+Engineering Highlights
+
+ATLAS was developed as a complete software and machine-learning system rather than as an isolated model experiment.
+
+Major engineering areas include:
+
+Deep-learning segmentation
+Ensemble inference
+Image preprocessing
+Geospatial processing
+Skeletonization
+Graph construction
+Network topology analysis
+Critical infrastructure identification
+Failure simulation
+Resilience analysis
+Risk classification
+REST API development
+Interactive React application development
+Dockerization
+Git LFS model management
+Automated visualization
+Report generation
+Design Philosophy
+
+The central idea behind ATLAS is to bridge the gap between AI perception and decision-oriented network analysis.
+
+A segmentation model can answer:
+
+Where are the roads?
+
+ATLAS continues further:
+
+How are those roads connected?
+
+Which parts of the network are structurally important?
+
+What happens if an important component fails?
+
+How severely does the network fragment?
+
+The system therefore combines computer vision with graph theory to move from road detection toward road-network understanding.
+
+Current Status
+Completed
+ React + TypeScript frontend
+ FastAPI backend
+ Satellite image upload
+ D-LinkNet34 inference
+ RoadGIE inference
+ Weighted segmentation ensemble
+ Road skeletonization
+ Graph construction
+ Topology analysis
+ Criticality analysis
+ Node failure simulation
+ Edge failure simulation
+ Resilience analysis
+ Risk assessment
+ Interactive visualization
+ Report generation
+ Dockerized backend
+ Git LFS model management
+ End-to-end local testing
+Limitations
+
+ATLAS is currently intended as a research, demonstration, and portfolio system rather than a production emergency-management platform.
+
+Important limitations include:
+
+Model performance depends on the characteristics of the input imagery.
+Segmentation errors can propagate into the graph representation.
+Graph reconstruction quality depends on the quality of segmentation and skeletonization.
+Simulation results represent the modeled road network and do not directly model real-world infrastructure behaviour.
+The current system is primarily designed for local and reproducible execution.
+Future Directions
+
+Potential extensions include:
+
+Larger-scale geospatial datasets
+Multi-region evaluation
+Temporal road-network monitoring
+Improved geospatial coordinate handling
+More detailed accessibility modelling
+Multi-hazard simulation
+Real-world GIS integration
+Cloud-scale inference
+Model optimization for edge deployment
+Why ATLAS?
+
+Traditional road-segmentation systems primarily focus on identifying road pixels in imagery.
+
+ATLAS attempts to take the analysis one step further.
+
+Satellite Imagery
+       ↓
+"What roads exist?"
+       ↓
+Road Segmentation
+       ↓
+"How are they connected?"
+       ↓
+Graph Construction
+       ↓
+"Which components matter most?"
+       ↓
+Criticality Analysis
+       ↓
+"What if one fails?"
+       ↓
+Failure Simulation
+       ↓
+"How much does the network degrade?"
+       ↓
+Resilience & Risk Analysis
+
+This creates a unified workflow connecting:
+
+Computer Vision + Geospatial Processing + Graph Theory + Network Resilience
+
+Project Goal
+
+ATLAS explores how satellite imagery, deep learning, graph theory, and resilience analysis can be combined into a single decision-support workflow for understanding road infrastructure.
+
+The project focuses on moving beyond:
+
+"Detect the roads."
+
+toward:
+
+"Understand the network and its vulnerability."
+
+Author
+
+Deepika Reddy
+
+Built as an end-to-end machine-learning, geospatial analysis, and software engineering project.
