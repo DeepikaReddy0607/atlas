@@ -564,10 +564,10 @@ class UNet(_UNet):
 class RoadGIEPredictor:
 
     CHECKPOINT_PATH = (
-        Path(__file__).resolve().parents[5]
-        / "RoadGIE"
-        / "checkpoint"
-        / "epoch-last.pt"
+    Path("/app")
+    / "RoadGIE"
+    / "checkpoint"
+    / "epoch-last.pt"
     )
 
     INPUT_SIZE = (

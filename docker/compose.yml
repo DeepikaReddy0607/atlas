@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+
+    container_name: atlas-backend
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ../backend/outputs:/app/outputs
+      - ../backend/uploads:/app/uploads
+
+    restart: unless-stopped
