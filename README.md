@@ -1,3 +1,51 @@
+# ATLAS
+
+## AI-Powered Geospatial Road Network Analysis & Resilience Platform
+
+ATLAS is an end-to-end geospatial intelligence platform that transforms satellite imagery into an interpretable road-network model and evaluates how that network behaves under infrastructure failures.
+
+Instead of stopping at road segmentation, ATLAS connects computer vision with graph-based topology and resilience analysis:
+
+**Satellite Image → Road Segmentation → Skeletonization → Graph Construction → Criticality Analysis → Failure Simulation → Risk Assessment → Visualization & Reporting**
+
+---
+
+## Overview
+
+Road networks extracted from satellite imagery can provide useful information for understanding connectivity, accessibility, and infrastructure vulnerability.
+
+ATLAS was designed as a complete engineering pipeline that combines deep-learning-based road extraction with graph-based network analysis.
+
+The system:
+
+1. Accepts a satellite image as input.
+2. Extracts road pixels using a deep-learning ensemble.
+3. Converts the segmentation into a road skeleton.
+4. Builds a graph representation of the road network.
+5. Identifies structurally important nodes and edges.
+6. Measures network resilience.
+7. Simulates infrastructure failures.
+8. Estimates the resulting network risk.
+9. Presents the analysis through an interactive geospatial workstation.
+10. Generates visual outputs and reports.
+
+---
+
+## Key Features
+
+### 🛰️ Satellite Image Road Extraction
+
+ATLAS uses a two-model segmentation ensemble:
+
+- **D-LinkNet34**
+- **RoadGIE**
+
+The production ensemble combines their probability maps using:
+
+```text
+D-LinkNet34 weight = 0.65
+RoadGIE weight     = 0.35
+Ensemble threshold = 0.275
 The ensemble produces the final binary road mask used by the downstream ATLAS pipeline.
 
 🧩 Road Network Reconstruction
