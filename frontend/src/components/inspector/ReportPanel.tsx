@@ -694,6 +694,7 @@ const formatCoordinate = (
   coordinate:
     | [number, number]
     | number[]
+    | null
     | undefined
 ) => {
   if (

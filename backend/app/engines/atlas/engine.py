@@ -1,5 +1,9 @@
-from app.engines.atlas.result import AtlasResult
+from pathlib import Path
+from typing import Optional
 
+from PIL import Image
+
+from app.engines.atlas.result import AtlasResult
 from app.engines.vision.pipeline import VisionPipeline
 
 from app.engines.analysis.roads import RoadExtractor
@@ -18,15 +22,13 @@ class AtlasEngine:
     """
     Main orchestration engine for ATLAS.
 
-    Pipeline:
+    Production pipeline:
 
         Input Image
               ↓
-        OpenEarthMap SegFormer-B5
+        ATLAS Road Ensemble
               ↓
-        Semantic Segmentation
-              ↓
-        Road Extraction
+        Binary Road Mask
               ↓
         Road Mask Refinement
               ↓
@@ -47,6 +49,9 @@ class AtlasEngine:
         Visualization
               ↓
         AtlasResult
+
+    AtlasEngine owns orchestration only. Domain operations remain
+    delegated to their respective analysis engines.
     """
 
     # ---------------------------------------------------------
@@ -55,13 +60,16 @@ class AtlasEngine:
 
     DEFAULT_MODEL = "ensemble"
 
-    # ROAD_CLASS_ID = 4
+    # These paths are intentionally retained for compatibility
+    # with the existing local/development workflow.
+    GENERATED_DIR = Path("generated")
+    ROAD_MASK_PATH = GENERATED_DIR / "atlas_roads.png"
+    SKELETON_PATH = GENERATED_DIR / "atlas_skeleton.png"
 
     def __init__(
         self,
         model_name: str = DEFAULT_MODEL,
     ):
-
         print(
             f"Initializing ATLAS with model: "
             f"{model_name}"
@@ -81,19 +89,41 @@ class AtlasEngine:
         # Visualization Engine
         # -----------------------------------------------------
 
-        self.visualization = (
-            VisualizationEngine()
-        )
+        self.visualization = VisualizationEngine()
 
         # -----------------------------------------------------
         # Last analysis
         # -----------------------------------------------------
 
-        self._last_result = None
+        # Kept for compatibility with the existing simulation API.
+        # The API must run with a single application process/worker
+        # while simulation state is kept in memory.
+        self._last_result: Optional[AtlasResult] = None
 
         print(
             "ATLAS engine initialized."
         )
+
+    # =========================================================
+    # INTERNAL HELPERS
+    # =========================================================
+
+    @classmethod
+    def _save_binary_mask(
+        cls,
+        mask,
+        path: Path,
+    ) -> None:
+        """Save a binary NumPy mask using the existing output paths."""
+
+        cls.GENERATED_DIR.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        Image.fromarray(
+            mask.astype("uint8") * 255
+        ).save(path)
 
     # =========================================================
     # ANALYZE
@@ -102,7 +132,19 @@ class AtlasEngine:
     def analyze(
         self,
         image_path: str,
-    ):
+    ) -> AtlasResult:
+
+        if not image_path:
+            raise ValueError(
+                "An image path is required for ATLAS analysis."
+            )
+
+        image_file = Path(image_path)
+
+        if not image_file.is_file():
+            raise ValueError(
+                f"Input image does not exist: {image_path}"
+            )
 
         print(
             "\n================================"
@@ -123,7 +165,7 @@ class AtlasEngine:
         )
 
         segmentation = self.vision.run(
-            image_path
+            str(image_file)
         )
 
         print(
@@ -154,8 +196,6 @@ class AtlasEngine:
         print(
             "\n[2/10] Extracting roads..."
         )
-
-        import numpy as np
 
         output_type = segmentation.metadata.get(
             "output_type",
@@ -198,9 +238,7 @@ class AtlasEngine:
 
         elif output_type == "binary_road":
 
-            road_mask = (
-                segmentation.mask > 0
-            )
+            road_mask = segmentation.mask > 0
 
             print(
                 "Segmentation type: binary road"
@@ -234,33 +272,30 @@ class AtlasEngine:
             "\n[3/10] Refining road mask..."
         )
 
-        refined_road_mask =RoadExtractor.refine(
-                                road_mask,
-                                min_component_size=0,
-                                kernel_size=1,
-                                closing_iterations=0,
-                                )
-        
+        # These settings are intentionally unchanged from the
+        # validated ATLAS production configuration.
+        refined_road_mask = RoadExtractor.refine(
+            road_mask,
+            min_component_size=0,
+            kernel_size=1,
+            closing_iterations=0,
+        )
 
         print(
             "Refined road pixels:",
-            int(
-                refined_road_mask.sum()
-            ),
+            int(refined_road_mask.sum()),
         )
 
-        from PIL import Image
-
-        Image.fromarray(
-            refined_road_mask.astype("uint8") * 255
-        ).save(
-            "generated/atlas_roads.png"
+        self._save_binary_mask(
+            refined_road_mask,
+            self.ROAD_MASK_PATH,
         )
 
         print(
-            "Road mask saved to:"
-            " generated/atlas_roads.png"
+            "Road mask saved to:",
+            str(self.ROAD_MASK_PATH),
         )
+
         # =====================================================
         # STEP 4 — Skeletonization
         # =====================================================
@@ -287,16 +322,17 @@ class AtlasEngine:
             "Skeleton pixels:",
             int(skeleton.sum()),
         )
-        Image.fromarray(
-            skeleton.astype("uint8") * 255
-        ).save(
-            "generated/atlas_skeleton.png"
+
+        self._save_binary_mask(
+            skeleton,
+            self.SKELETON_PATH,
         )
 
         print(
-            "Skeleton saved to:"
-            " generated/atlas_skeleton.png"
+            "Skeleton saved to:",
+            str(self.SKELETON_PATH),
         )
+
         # =====================================================
         # STEP 5 — Pixel Graph
         # =====================================================
@@ -327,10 +363,8 @@ class AtlasEngine:
             "\n[6/10] Building topology graph..."
         )
 
-        topology_graph = (
-            TopologyBuilder.build(
-                pixel_graph
-            )
+        topology_graph = TopologyBuilder.build(
+            pixel_graph
         )
 
         print(
@@ -351,26 +385,18 @@ class AtlasEngine:
             "\n[7/10] Computing criticality..."
         )
 
-        node_scores = (
-            CriticalityAnalyzer.node_centrality(
-                topology_graph
-            )
+        node_scores = CriticalityAnalyzer.node_centrality(
+            topology_graph
         )
 
-        edge_scores = (
-            CriticalityAnalyzer.edge_centrality(
-                topology_graph
-            )
+        edge_scores = CriticalityAnalyzer.edge_centrality(
+            topology_graph
         )
 
         criticality = {
             "node": node_scores,
             "edge": edge_scores,
         }
-
-        # -----------------------------------------------------
-        # Find most critical node
-        # -----------------------------------------------------
 
         if node_scores:
 
@@ -402,11 +428,9 @@ class AtlasEngine:
 
         if critical_node is not None:
 
-            failed_graph = (
-                ResilienceAnalyzer.remove_node(
-                    topology_graph,
-                    critical_node,
-                )
+            failed_graph = ResilienceAnalyzer.remove_node(
+                topology_graph,
+                critical_node,
             )
 
             components = (
@@ -416,16 +440,15 @@ class AtlasEngine:
             )
 
             largest_component = (
-                ResilienceAnalyzer
-                .largest_component_size(
+                ResilienceAnalyzer.largest_component_size(
                     failed_graph
                 )
             )
 
         else:
 
-            failed_graph = topology_graph.copy()
-
+            # No failure is applied when there is no critical node.
+            # Use the original topology for baseline measurements.
             components = (
                 ResilienceAnalyzer.connected_components(
                     topology_graph
@@ -433,21 +456,17 @@ class AtlasEngine:
             )
 
             largest_component = (
-                ResilienceAnalyzer
-                .largest_component_size(
+                ResilienceAnalyzer.largest_component_size(
                     topology_graph
                 )
             )
 
+        # Only public resilience metrics belong in AtlasResult.
+        # The temporary failed graph remains an internal object.
         resilience = {
             "critical_node": critical_node,
-            "failed_graph": failed_graph,
-            "connected_components": len(
-                components
-            ),
-            "largest_component": (
-                largest_component
-            ),
+            "connected_components": len(components),
+            "largest_component": largest_component,
         }
 
         print(
@@ -468,27 +487,20 @@ class AtlasEngine:
             "\n[9/10] Assessing risk..."
         )
 
-        original_size = (
-            topology_graph.number_of_nodes()
-        )
+        original_size = topology_graph.number_of_nodes()
 
         ari = (
-            largest_component
-            / original_size
+            largest_component / original_size
             if original_size > 0
             else 0
         )
 
-        risk_level = (
-            RiskAssessment.classify(
-                ari
-            )
+        risk_level = RiskAssessment.classify(
+            ari
         )
 
-        recommendation = (
-            RiskAssessment.recommendation(
-                risk_level
-            )
+        recommendation = RiskAssessment.recommendation(
+            risk_level
         )
 
         risk = {
@@ -517,17 +529,14 @@ class AtlasEngine:
 
         if critical_node is not None:
 
-            simulation = (
-                ScenarioSimulator
-                .simulate_node_failure(
-                    topology_graph,
-                    critical_node,
-                )
+            simulation = ScenarioSimulator.simulate_node_failure(
+                topology_graph,
+                critical_node,
             )
 
         else:
 
-            simulation = {}
+            simulation = None
 
             print(
                 "Simulation skipped: "
@@ -560,7 +569,7 @@ class AtlasEngine:
 
         atlas_result.visualizations = (
             self.visualization.generate(
-                image_path=image_path,
+                image_path=str(image_file),
                 atlas_result=atlas_result,
             )
         )
@@ -590,10 +599,22 @@ class AtlasEngine:
     def simulate(
         self,
         scenario: str,
+        node=None,
+        edge=None,
     ):
         """
         Run a failure simulation on the most
         recently analyzed topology graph.
+
+        Supported scenarios:
+
+            critical
+            critical_node
+            node
+            critical_edge
+            edge
+
+        The stored topology graph is never mutated.
         """
 
         if self._last_result is None:
@@ -613,11 +634,21 @@ class AtlasEngine:
                 "Topology graph is not available."
             )
 
+        normalized = (
+            scenario
+            .strip()
+            .lower()
+        )
+
         # -----------------------------------------------------
-        # Critical-node failure
+        # Critical node
         # -----------------------------------------------------
 
-        if scenario == "critical":
+        if normalized in {
+            "critical",
+            "critical_node",
+            "critical-node",
+        }:
 
             return (
                 ScenarioSimulator
@@ -626,6 +657,63 @@ class AtlasEngine:
                 )
             )
 
+        # -----------------------------------------------------
+        # Selected node
+        # -----------------------------------------------------
+
+        if normalized in {
+            "node",
+            "node_failure",
+            "node-failure",
+        }:
+
+            if node is None:
+                raise ValueError(
+                    "Node coordinates are required "
+                    "for node failure simulation."
+                )
+            return (
+                ScenarioSimulator
+                .simulate_node_failure(
+                    topology_graph,
+                    node,
+                )
+            )
+
+        # -----------------------------------------------------
+        # Critical edge
+        # -----------------------------------------------------
+
+        if normalized in {
+            "critical_edge",
+            "critical-edge",
+        }:
+
+            return (
+                ScenarioSimulator
+                .simulate_most_critical_edge(
+                    topology_graph
+                )
+            )
+
+        # -----------------------------------------------------
+        # Selected edge
+        # -----------------------------------------------------
+
+        if normalized in {
+            "edge",
+            "edge_failure",
+            "edge-failure",
+        }:
+            if edge is None:
+                raise ValueError(
+                    "Edge coordinates are required "
+                    "for edge failure simulation."
+                )
+            return ScenarioSimulator.simulate_edge_failure(
+                topology_graph,
+                edge,
+            )
         raise ValueError(
             f"Unsupported simulation scenario: "
             f"{scenario}"

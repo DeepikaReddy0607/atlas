@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 
 import { useWorkspace } from "../../context/WorkspaceContext";
-
+import type { MouseEvent } from "react";
 const WorkspaceTabs = () => {
   const {
     workspaces,
@@ -29,7 +29,7 @@ const WorkspaceTabs = () => {
   // ---------------------------------------------------------
 
   const handleCloseWorkspace = (
-    event: React.MouseEvent,
+    event: MouseEvent,
     id: string
   ) => {
     event.stopPropagation();

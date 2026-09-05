@@ -7,12 +7,43 @@ import {
 } from "lucide-react";
 
 import "./header.css";
+import { useState } from "react";
+import { useWorkspace } from "../../../context/WorkspaceContext";
 
 interface HeaderProps {
   onNewAnalysis?: () => void;
+  onOpenCommandPalette?: ()  => void;
 }
 
-const Header = ({ onNewAnalysis }: HeaderProps) => {
+const Header = ({ onNewAnalysis, onOpenCommandPalette, }: HeaderProps) => {
+  const {
+  activeWorkspace,
+  renameWorkspace,
+} = useWorkspace();
+
+const [renaming, setRenaming] =
+  useState(false);
+
+const [nameDraft, setNameDraft] =
+  useState(activeWorkspace.name);
+  const startRename = () => {
+  setNameDraft(activeWorkspace.name);
+  setRenaming(true);
+};
+
+const finishRename = () => {
+  const name =
+    nameDraft.trim();
+
+  if (name) {
+    renameWorkspace(
+      activeWorkspace.id,
+      name
+    );
+  }
+
+  setRenaming(false);
+};
   return (
     <header className="atlas-header">
       <div className="atlas-header__inner">
@@ -23,12 +54,45 @@ const Header = ({ onNewAnalysis }: HeaderProps) => {
 
         <div className="atlas-header__left">
 
-          <button
-            type="button"
-            className="atlas-header__project"
-          >
-            Untitled.atlas
-          </button>
+          {renaming ? (
+            <input
+              autoFocus
+              value={nameDraft}
+              onChange={(event) =>
+                setNameDraft(event.target.value)
+              }
+              onBlur={finishRename}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  finishRename();
+                }
+
+                if (event.key === "Escape") {
+                  setRenaming(false);
+                }
+              }}
+              className="
+                w-[180px]
+                border
+                border-[#31563b]
+                bg-[#07130c]
+                px-2
+                py-1
+                text-sm
+                text-[#E8F0E8]
+                outline-none
+              "
+            />
+          ) : (
+            <button
+              type="button"
+              className="atlas-header__project"
+              onDoubleClick={startRename}
+              title="Double-click to rename workspace"
+            >
+              {activeWorkspace.name}
+            </button>
+          )}
 
           <button
             type="button"
@@ -100,6 +164,7 @@ const Header = ({ onNewAnalysis }: HeaderProps) => {
           <button
             type="button"
             className="atlas-header__search"
+            onClick={onOpenCommandPalette}
           >
             <Search
               size={15}

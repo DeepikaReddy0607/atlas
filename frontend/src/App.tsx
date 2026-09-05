@@ -22,9 +22,6 @@ function App() {
   const [appMode, setAppMode] =
     useState<AppMode>("welcome");
 
-  const [bootInitialized, setBootInitialized] =
-    useState(false);
-
   const [isTransitioning, setIsTransitioning] =
     useState(false);
 

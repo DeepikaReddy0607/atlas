@@ -43,7 +43,7 @@ const WelcomeScreen = ({
 }: WelcomeScreenProps) => {
   const shouldReduceMotion = useReducedMotion();
 
-  const [statusIndex, setStatusIndex] = useState(0);
+  const [statusIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   /*
    * ---------------------------------------------------------

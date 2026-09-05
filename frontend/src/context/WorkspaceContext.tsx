@@ -19,10 +19,6 @@ export interface AtlasWorkspace {
   name: string;
   createdAt: number;
 
-  // ----------------------------------------------------------
-  // Analysis state
-  // ----------------------------------------------------------
-
   selectedFile: File | null;
 
   analysisResult: AtlasResult | null;
@@ -30,7 +26,9 @@ export interface AtlasWorkspace {
   loading: boolean;
 
   error: string | null;
+
   layers: Layer[];
+
   selectedLayerId: string | null;
 }
 
@@ -62,6 +60,16 @@ interface WorkspaceContextType {
   ) => void;
 }
 
+/* ============================================================
+   Constants
+============================================================ */
+
+const STORAGE_KEY = "atlas-workspaces-v1";
+
+/* ============================================================
+   Context
+============================================================ */
+
 const WorkspaceContext =
   createContext<WorkspaceContextType | null>(null);
 
@@ -82,10 +90,6 @@ const createWorkspace = (
 
     createdAt: Date.now(),
 
-    // --------------------------------------------------------
-    // Initial analysis state
-    // --------------------------------------------------------
-
     selectedFile: null,
 
     analysisResult: null,
@@ -101,6 +105,48 @@ const createWorkspace = (
 };
 
 /* ============================================================
+   Load Saved Workspaces
+============================================================ */
+
+const loadWorkspaces = (): AtlasWorkspace[] => {
+  try {
+    const stored =
+      localStorage.getItem(STORAGE_KEY);
+
+    if (!stored) {
+      return [createWorkspace(1)];
+    }
+
+    const parsed =
+      JSON.parse(stored) as AtlasWorkspace[];
+
+    if (
+      !Array.isArray(parsed) ||
+      parsed.length === 0
+    ) {
+      return [createWorkspace(1)];
+    }
+
+    /*
+     * File objects cannot be restored from JSON.
+     * We intentionally restore everything else.
+     */
+    return parsed.map((workspace) => ({
+      ...workspace,
+      selectedFile: null,
+      loading: false,
+    }));
+  } catch (error) {
+    console.error(
+      "Failed to restore ATLAS workspaces:",
+      error
+    );
+
+    return [createWorkspace(1)];
+  }
+};
+
+/* ============================================================
    Provider
 ============================================================ */
 
@@ -109,17 +155,14 @@ export const WorkspaceProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const initialWorkspace =
-    createWorkspace(1);
-
   const [workspaces, setWorkspaces] =
-    useState<AtlasWorkspace[]>([
-      initialWorkspace,
-    ]);
+    useState<AtlasWorkspace[]>(
+      loadWorkspaces
+    );
 
   const [activeWorkspaceId, setActiveWorkspaceId] =
     useState<string>(
-      initialWorkspace.id
+      () => workspaces[0]?.id
     );
 
   /* ==========================================================
@@ -133,122 +176,180 @@ export const WorkspaceProvider = ({
     ) ?? workspaces[0];
 
   /* ==========================================================
+     Persist Workspaces
+  ========================================================== */
+
+  const persistWorkspaces = useCallback(
+    (next: AtlasWorkspace[]) => {
+      try {
+        /*
+         * Do not attempt to serialize File objects.
+         */
+        const serializable =
+          next.map((workspace) => ({
+            ...workspace,
+            selectedFile: null,
+            loading: false,
+          }));
+
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(serializable)
+        );
+      } catch (error) {
+        console.error(
+          "Failed to persist ATLAS workspace:",
+          error
+        );
+      }
+    },
+    []
+  );
+
+  /* ==========================================================
      Add Workspace
   ========================================================== */
 
-  const addWorkspace = () => {
-    const newWorkspace =
-      createWorkspace(
-        workspaces.length + 1
+  const addWorkspace = useCallback(() => {
+    setWorkspaces((prev) => {
+      const newWorkspace =
+        createWorkspace(prev.length + 1);
+
+      const next = [
+        ...prev,
+        newWorkspace,
+      ];
+
+      persistWorkspaces(next);
+
+      setActiveWorkspaceId(
+        newWorkspace.id
       );
 
-    setWorkspaces((prev) => [
-      ...prev,
-      newWorkspace,
-    ]);
-
-    setActiveWorkspaceId(
-      newWorkspace.id
-    );
-  };
+      return next;
+    });
+  }, [persistWorkspaces]);
 
   /* ==========================================================
      Close Workspace
   ========================================================== */
 
-  const closeWorkspace = (
-    id: string
-  ) => {
-    setWorkspaces((prev) => {
-      // ------------------------------------------------------
-      // Never allow the application to have zero workspaces.
-      // ------------------------------------------------------
+  const closeWorkspace = useCallback(
+    (id: string) => {
+      setWorkspaces((prev) => {
+        if (prev.length === 1) {
+          return prev;
+        }
 
-      if (prev.length === 1) {
-        return prev;
-      }
-
-      const index =
-        prev.findIndex(
-          (workspace) =>
-            workspace.id === id
-        );
-
-      const next =
-        prev.filter(
-          (workspace) =>
-            workspace.id !== id
-        );
-
-      // ------------------------------------------------------
-      // If the active workspace is being closed,
-      // activate the nearest remaining workspace.
-      // ------------------------------------------------------
-
-      if (
-        id === activeWorkspaceId &&
-        next.length > 0
-      ) {
-        const nextIndex =
-          Math.max(
-            0,
-            Math.min(
-              index - 1,
-              next.length - 1
-            )
+        const index =
+          prev.findIndex(
+            (workspace) =>
+              workspace.id === id
           );
 
-        setActiveWorkspaceId(
-          next[nextIndex].id
-        );
-      }
+        const next =
+          prev.filter(
+            (workspace) =>
+              workspace.id !== id
+          );
 
-      return next;
-    });
-  };
+        if (
+          id === activeWorkspaceId &&
+          next.length > 0
+        ) {
+          const nextIndex =
+            Math.max(
+              0,
+              Math.min(
+                index - 1,
+                next.length - 1
+              )
+            );
+
+          setActiveWorkspaceId(
+            next[nextIndex].id
+          );
+        }
+
+        persistWorkspaces(next);
+
+        return next;
+      });
+    },
+    [
+      activeWorkspaceId,
+      persistWorkspaces,
+    ]
+  );
 
   /* ==========================================================
      Rename Workspace
   ========================================================== */
 
-  const renameWorkspace = (
-    id: string,
-    name: string
-  ) => {
-    setWorkspaces((prev) =>
-      prev.map((workspace) =>
-        workspace.id === id
-          ? {
-              ...workspace,
-              name,
-            }
-          : workspace
-      )
-    );
-  };
+  const renameWorkspace = useCallback(
+    (
+      id: string,
+      name: string
+    ) => {
+      const cleanName =
+        name.trim();
+
+      if (!cleanName) {
+        return;
+      }
+
+      setWorkspaces((prev) => {
+        const next =
+          prev.map((workspace) =>
+            workspace.id === id
+              ? {
+                  ...workspace,
+                  name:
+                    cleanName.endsWith(
+                      ".atlas"
+                    )
+                      ? cleanName
+                      : `${cleanName}.atlas`,
+                }
+              : workspace
+          );
+
+        persistWorkspaces(next);
+
+        return next;
+      });
+    },
+    [persistWorkspaces]
+  );
 
   /* ==========================================================
      Update Workspace
   ========================================================== */
 
   const updateWorkspace = useCallback(
-  (
-    id: string,
-    updates: Partial<AtlasWorkspace>
-  ) => {
-    setWorkspaces((prev) =>
-      prev.map((workspace) =>
-        workspace.id === id
-          ? {
-              ...workspace,
-              ...updates,
-            }
-          : workspace
-      )
-    );
-  },
-  []
-);
+    (
+      id: string,
+      updates: Partial<AtlasWorkspace>
+    ) => {
+      setWorkspaces((prev) => {
+        const next =
+          prev.map((workspace) =>
+            workspace.id === id
+              ? {
+                  ...workspace,
+                  ...updates,
+                }
+              : workspace
+          );
+
+        persistWorkspaces(next);
+
+        return next;
+      });
+    },
+    [persistWorkspaces]
+  );
+
   /* ==========================================================
      Context Value
   ========================================================== */
@@ -276,6 +377,10 @@ export const WorkspaceProvider = ({
         workspaces,
         activeWorkspaceId,
         activeWorkspace,
+        addWorkspace,
+        closeWorkspace,
+        renameWorkspace,
+        updateWorkspace,
       ]
     );
 

@@ -85,6 +85,9 @@ const RiskPanel = () => {
   const riskStyle =
     getRiskStyle();
 
+  const criticalNode =
+    resilience.critical_node;
+
   return (
     <div
       className="
@@ -317,16 +320,21 @@ const RiskPanel = () => {
             Most Critical Node
           </p>
 
-          <p className="mt-1 text-lg font-semibold">
-            (
-            {resilience.critical_node[0]},
-            {resilience.critical_node[1]}
-            )
-          </p>
+          {criticalNode ? (
+            <>
+              <p className="mt-1 text-lg font-semibold">
+                ({criticalNode[0]}, {criticalNode[1]})
+              </p>
 
-          <p className="mt-1 text-xs text-[var(--atlas-text-muted)]">
-            Highest network criticality identified during analysis
-          </p>
+              <p className="mt-1 text-xs text-[var(--atlas-text-muted)]">
+                Highest network criticality identified during analysis
+              </p>
+            </>
+          ) : (
+            <p className="mt-1 text-sm text-[var(--atlas-text-muted)]">
+              No critical node identified.
+            </p>
+          )}
         </div>
       </section>
 

@@ -86,7 +86,6 @@ const SimulationPanel = () => {
         100
       : 0;
 
-
   /*
    * ---------------------------------------------------------
    * Network status
@@ -94,9 +93,8 @@ const SimulationPanel = () => {
    */
 
   const networkStatus =
-  analysisResult?.risk?.level ??
-  "UNKNOWN";
-
+    analysisResult?.risk?.level ??
+    "UNKNOWN";
 
   const networkAvailable =
     !!analysisResult;
@@ -107,33 +105,39 @@ const SimulationPanel = () => {
    * ---------------------------------------------------------
    */
 
-    const handleRunSimulation = async () => {
-      if (!analysisResult || running) {
-        return;
-      }
+  const handleRunSimulation = async () => {
+    if (!analysisResult || running) {
+      return;
+    }
 
-      setRunning(true);
-      setError(null);
-      setResult(null);
+    setRunning(true);
+    setError(null);
+    setResult(null);
 
-      try {
-        const simulationResult =
-          await runSimulation(selectedScenario);
-
+    try {
+      const simulationResult =
+        await runSimulation(
+          selectedScenario,
+          selectedScenario === "node"
+            ? criticalNode ?? undefined
+            : undefined
+        );
         setResult(simulationResult);
-      } catch (err) {
-        console.error(
-          "Simulation request failed:",
-          err
-        );
+    } catch (err) {
+      console.error(
+        "Simulation request failed:",
+        err
+      );
 
-        setError(
-          "Simulation failed. Please check the backend."
-        );
-      } finally {
-        setRunning(false);
-      }
-    };
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Simulation failed. Please check the backend."
+      );
+    } finally {
+      setRunning(false);
+    }
+  };
 
   /*
    * ---------------------------------------------------------
@@ -238,16 +242,12 @@ const SimulationPanel = () => {
             <div className="grid grid-cols-2 gap-2">
               <Metric
                 label="Nodes"
-                value={
-                  topology?.nodes ?? 0
-                }
+                value={topology?.nodes ?? 0}
               />
 
               <Metric
                 label="Edges"
-                value={
-                  topology?.edges ?? 0
-                }
+                value={topology?.edges ?? 0}
               />
 
               <Metric
@@ -266,8 +266,6 @@ const SimulationPanel = () => {
                 }
               />
             </div>
-
-            {/* Critical node */}
 
             <div
               className="
@@ -313,63 +311,39 @@ const SimulationPanel = () => {
 
               <div className="space-y-3">
                 <ScenarioCard
-                  title="Flood"
-                  description="Simulate failure of road sections affected by flooding."
-                  scenario="flood"
-                  selected={
-                    selectedScenario ===
-                    "flood"
-                  }
-                  onClick={() =>
-                    setSelectedScenario(
-                      "flood"
-                    )
-                  }
+                  title="Flood Impact"
+                  subtitle="Critical Node Failure"
+                  description="Simulate the loss of a critical junction representing a flood-affected road segment and evaluate the resulting connectivity loss."
+                  scenario="critical_node"
+                  selected={selectedScenario === "critical_node"}
+                  onClick={() => setSelectedScenario("critical_node")}
                 />
 
                 <ScenarioCard
-                  title="Earthquake"
-                  description="Simulate widespread damage across network connections."
-                  scenario="earthquake"
-                  selected={
-                    selectedScenario ===
-                    "earthquake"
-                  }
-                  onClick={() =>
-                    setSelectedScenario(
-                      "earthquake"
-                    )
-                  }
+                  title="Earthquake Impact"
+                  subtitle="Critical Edge Failure"
+                  description="Simulate the loss of a critical road connection representing earthquake-related infrastructure disruption."
+                  scenario="critical_edge"
+                  selected={selectedScenario === "critical_edge"}
+                  onClick={() => setSelectedScenario("critical_edge")}
                 />
 
                 <ScenarioCard
                   title="Bridge Failure"
-                  description="Simulate removal of bridge-dependent connections."
-                  scenario="bridge"
-                  selected={
-                    selectedScenario ===
-                    "bridge"
-                  }
-                  onClick={() =>
-                    setSelectedScenario(
-                      "bridge"
-                    )
-                  }
+                  subtitle="Selected Edge Failure"
+                  description="Simulate failure of a selected road connection, such as a bridge, and measure the resulting network fragmentation."
+                  scenario="edge"
+                  selected={selectedScenario === "edge"}
+                  onClick={() => setSelectedScenario("edge")}
                 />
 
                 <ScenarioCard
                   title="Critical Junction"
-                  description="Simulate failure of the most critical network node."
-                  scenario="critical"
-                  selected={
-                    selectedScenario ===
-                    "critical"
-                  }
-                  onClick={() =>
-                    setSelectedScenario(
-                      "critical"
-                    )
-                  }
+                  subtitle="Selected Node Failure"
+                  description="Simulate failure of a specific network junction and evaluate the resulting connectivity impact."
+                  scenario="node"
+                  selected={selectedScenario === "node"}
+                  onClick={() => setSelectedScenario("node")}
                 />
               </div>
             </section>
@@ -421,8 +395,6 @@ const SimulationPanel = () => {
 
           {result && !running && (
             <section className="mt-6">
-              {/* Result header */}
-
               <div className="mb-3 flex items-center justify-between">
                 <span
                   className="
@@ -450,35 +422,25 @@ const SimulationPanel = () => {
                 </span>
               </div>
 
-              {/* Basic result metrics */}
-
               <div className="grid grid-cols-2 gap-2">
                 <Metric
                   label="Remaining Nodes"
-                  value={
-                    result.remaining_nodes
-                  }
+                  value={result.remaining_nodes}
                 />
 
                 <Metric
                   label="Remaining Edges"
-                  value={
-                    result.remaining_edges
-                  }
+                  value={result.remaining_edges}
                 />
 
                 <Metric
                   label="Components"
-                  value={
-                    result.connected_components
-                  }
+                  value={result.connected_components}
                 />
 
                 <Metric
                   label="Largest Component"
-                  value={
-                    result.largest_component
-                  }
+                  value={result.largest_component}
                 />
               </div>
 
@@ -509,11 +471,9 @@ const SimulationPanel = () => {
                       text-xs
                       font-medium
                       ${
-                        networkStatus ===
-                        "HIGH"
+                        networkStatus === "HIGH"
                           ? "bg-red-500/15 text-red-400"
-                          : networkStatus ===
-                            "MODERATE"
+                          : networkStatus === "MODERATE"
                           ? "bg-amber-500/15 text-amber-400"
                           : networkStatus === "LOW"
                           ? "bg-emerald-500/15 text-emerald-400"
@@ -526,37 +486,19 @@ const SimulationPanel = () => {
                 </div>
 
                 <div className="mt-4 space-y-4">
-                  {/* Nodes */}
-
                   <ImpactComparison
                     label="Nodes"
-                    before={
-                      originalNodes
-                    }
-                    after={
-                      remainingNodes
-                    }
-                    percentage={
-                      nodeLossPercent
-                    }
+                    before={originalNodes}
+                    after={remainingNodes}
+                    percentage={nodeLossPercent}
                   />
-
-                  {/* Edges */}
 
                   <ImpactComparison
                     label="Edges"
-                    before={
-                      originalEdges
-                    }
-                    after={
-                      remainingEdges
-                    }
-                    percentage={
-                      edgeLossPercent
-                    }
+                    before={originalEdges}
+                    after={remainingEdges}
+                    percentage={edgeLossPercent}
                   />
-
-                  {/* Components */}
 
                   <div className="flex items-center justify-between">
                     <div>
@@ -573,8 +515,6 @@ const SimulationPanel = () => {
                       {componentCount}
                     </span>
                   </div>
-
-                  {/* Largest Component */}
 
                   <div className="flex items-center justify-between">
                     <div>
@@ -625,6 +565,7 @@ const SimulationPanel = () => {
               ================================================== */}
 
               <button
+                type="button"
                 onClick={handleReset}
                 className="
                   mt-4
@@ -678,9 +619,7 @@ const SimulationPanel = () => {
           {!result && !running && (
             <div className="mt-6">
               <RunSimulationButton
-                onClick={
-                  handleRunSimulation
-                }
+                onClick={handleRunSimulation}
                 disabled={
                   !analysisResult ||
                   running
@@ -807,3 +746,4 @@ const ImpactComparison = ({
 };
 
 export default SimulationPanel;
+

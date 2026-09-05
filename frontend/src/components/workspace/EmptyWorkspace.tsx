@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 import {
   ArrowRight,
   ChartNoAxesColumnIncreasing,
@@ -25,6 +27,7 @@ const EmptyWorkspace = ({
   onFileSelected,
   onNewAnalysis,
 }: EmptyWorkspaceProps) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
   const handleFile = (file: File | null) => {
     if (!file) return;
 
@@ -34,13 +37,6 @@ const EmptyWorkspace = ({
     }
 
     onFileSelected(file);
-  };
-
-  const handleBrowse = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    handleFile(event.target.files?.[0] ?? null);
-    event.target.value = "";
   };
 
   const handleDrop = (
@@ -53,15 +49,17 @@ const EmptyWorkspace = ({
 
   return (
     <main
-      className="
-        relative
-        h-full
-        w-full
-        overflow-hidden
-        bg-white
-        text-[#263238]
-      "
-    >
+  className="
+    relative
+    h-full
+    w-full
+    overflow-hidden
+    bg-white
+    text-[#263238]
+  "
+  onDragOver={(event) => event.preventDefault()}
+  onDrop={handleDrop}
+>
       {/* =====================================================
           TECHNICAL BACKGROUND
       ===================================================== */}
@@ -337,7 +335,7 @@ const EmptyWorkspace = ({
 
               <button
                 type="button"
-                onClick={() => {}}
+                onClick={() => fileInputRef.current?.click()}
                 className="
                   flex
                   h-[62px]

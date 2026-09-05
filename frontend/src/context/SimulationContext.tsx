@@ -8,24 +8,30 @@ import {
 import type { SimulationResult } from "../types/atlas";
 
 export type SimulationScenario =
-  | "flood"
-  | "earthquake"
-  | "bridge"
-  | "critical";
+  | "critical_node"
+  | "critical_edge"
+  | "edge"
+  | "node";
 
 interface SimulationContextType {
   selectedScenario: SimulationScenario;
+
   setSelectedScenario: (
     scenario: SimulationScenario
   ) => void;
 
   running: boolean;
+
   setRunning: (running: boolean) => void;
 
   result: SimulationResult | null;
-  setResult: (result: SimulationResult | null) => void;
+
+  setResult: (
+    result: SimulationResult | null
+  ) => void;
 
   error: string | null;
+
   setError: (error: string | null) => void;
 }
 
@@ -40,7 +46,7 @@ export const SimulationProvider = ({
   children: ReactNode;
 }) => {
   const [selectedScenario, setSelectedScenario] =
-    useState<SimulationScenario>("critical");
+    useState<SimulationScenario>("critical_node");
 
   const [running, setRunning] = useState(false);
 

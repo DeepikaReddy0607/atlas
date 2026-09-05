@@ -856,3 +856,86 @@
 
   z-index: 10;
 }
+
+/* ============================================================
+   INTERACTIVE MAP VIEW
+   ============================================================ */
+
+.atlas-workspace__image-area {
+  cursor: grab;
+
+  user-select: none;
+
+  touch-action: none;
+}
+
+.atlas-workspace__image-area.is-dragging {
+  cursor: grabbing;
+}
+
+
+/* ============================================================
+   IMAGE STACK
+   ============================================================ */
+
+.atlas-workspace__image-stack {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  transform-origin: center center;
+
+  transition: transform 120ms ease-out;
+
+  will-change: transform;
+
+  pointer-events: none;
+}
+
+
+/*
+ * Disable transition while actively dragging.
+ * This prevents the image from feeling delayed.
+ */
+
+.atlas-workspace__image-area.is-dragging
+  .atlas-workspace__image-stack {
+  transition: none;
+}
+
+
+/* ============================================================
+   FULLSCREEN
+   ============================================================ */
+
+.atlas-workspace__image-area:fullscreen {
+  width: 100vw;
+  height: 100vh;
+
+  background: #020806;
+}
+
+
+/* ============================================================
+   CONTROL LAYER
+   ============================================================ */
+
+.atlas-workspace__map-controls {
+  pointer-events: auto;
+}
+.atlas-workspace__image-area {
+  position: relative;
+  overflow: hidden;
+}
+
+.atlas-workspace__analysis-image,
+.atlas-workspace__layer-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

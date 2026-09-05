@@ -2,6 +2,7 @@ import type { SimulationScenario } from "../../context/SimulationContext";
 
 interface Props {
   title: string;
+  subtitle: string;
   description: string;
   scenario: SimulationScenario;
   selected: boolean;
@@ -10,6 +11,7 @@ interface Props {
 
 const ScenarioCard = ({
   title,
+  subtitle,
   description,
   selected,
   onClick,
@@ -32,10 +34,12 @@ const ScenarioCard = ({
         }
       `}
     >
-      <h3 className="font-semibold">
+      <h3 className="text-based font-semibold">
         {title}
       </h3>
-
+        <p className="mt-1 text-sm font-medium text-blue-400">
+          {subtitle}
+        </p>
       <p className="mt-1 text-sm text-[var(--atlas-text-muted)]">
         {description}
       </p>

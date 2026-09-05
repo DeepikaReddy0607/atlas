@@ -3,11 +3,23 @@
 // ============================================================
 
 // -----------------------------
+// Shared coordinate types
+// -----------------------------
+
+export type Coordinate = [number, number];
+
+export type EdgeCoordinate = [
+  Coordinate,
+  Coordinate
+];
+
+
+// -----------------------------
 // Segmentation
 // -----------------------------
 
 export interface SegmentationMetadata {
-  model_id: string;
+  [key: string]: unknown;
 }
 
 export interface SegmentationResult {
@@ -57,15 +69,12 @@ export interface GraphStats {
 // -----------------------------
 
 export interface NodeCriticality {
-  node: [number, number];
+  node: Coordinate;
   score: number;
 }
 
 export interface EdgeCriticality {
-  edge: [
-    [number, number],
-    [number, number]
-  ];
+  edge: EdgeCoordinate;
   score: number;
 }
 
@@ -80,7 +89,7 @@ export interface CriticalityResult {
 // -----------------------------
 
 export interface ResilienceResult {
-  critical_node: [number, number];
+  critical_node: Coordinate | null;
   connected_components: number;
   largest_component: number;
 }
@@ -104,12 +113,9 @@ export interface RiskResult {
 export interface SimulationResult {
   scenario: string;
 
-  removed_nodes: [number, number][];
+  removed_nodes: Coordinate[];
 
-  removed_edges: [
-    [number, number],
-    [number, number]
-  ][];
+  removed_edges: EdgeCoordinate[];
 
   original_nodes: number;
   original_edges: number;
@@ -120,7 +126,7 @@ export interface SimulationResult {
   connected_components: number;
   largest_component: number;
 
-  critical_node: [number, number];
+  critical_node: Coordinate | null;
 }
 
 
@@ -131,9 +137,6 @@ export interface SimulationResult {
 export interface VisualizationResult {
   /**
    * Satellite image with segmentation overlay.
-   *
-   * Usually returned as a base64 string or
-   * an already prepared data URL.
    */
   segmentation_overlay: string | null;
 
@@ -178,9 +181,9 @@ export interface AtlasResult {
 
   risk: RiskResult;
 
-  simulation: SimulationResult;
+  simulation: SimulationResult | null;
 
-  recommendation: string;
+  recommendation: string | null;
 
   visualizations: VisualizationResult;
 }
