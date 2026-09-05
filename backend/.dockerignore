@@ -25,3 +25,26 @@ outputs/reports/*
 
 .DS_Store
 Thumbs.db
+
+.git
+.gitignore
+.vscode
+
+frontend
+datasets
+previews
+docs
+ml
+venv
+node_modules
+
+backend/data
+backend/experiments
+backend/generated
+
+*.pyc
+__pycache__
+*.log
+
+.cache
+*.ipynb_checkpoints
