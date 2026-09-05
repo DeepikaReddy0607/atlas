@@ -320,3 +320,12 @@ backend/cache/
 # OS
 .DS_Store
 Thumbs.db
+
+# Production ML weights required for Docker deployment
+!backend/models/
+!backend/models/dlinknet/
+!backend/models/dlinknet/log01_dlink34.th
+
+!RoadGIE/
+!RoadGIE/checkpoint/
+!RoadGIE/checkpoint/epoch-last.pt
